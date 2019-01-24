@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function getChildRouter(router, routeName) {
+    if (router.childRouters && router.childRouters[routeName]) {
+        return router.childRouters[routeName];
+    }
+    var Component = router.getComponentForRouteName(routeName);
+    return Component.router;
+}
+exports.default = getChildRouter;

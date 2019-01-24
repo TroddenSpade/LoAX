@@ -1,0 +1,1 @@
+{"version":3,"file":"ExponentImagePicker.web.js","sourceRoot":"","sources":["../../src/ImagePicker/ExponentImagePicker.web.ts"],"names":[],"mappings":"AAAA,eAAe;IACb,IAAI,IAAI;QACN,OAAO,qBAAqB,CAAC;IAC/B,CAAC;CACF,CAAC","sourcesContent":["export default {\n  get name(): string {\n    return 'ExponentImagePicker';\n  },\n};\n"]}

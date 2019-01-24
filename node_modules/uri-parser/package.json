@@ -1,0 +1,35 @@
+{
+  "name": "uri-parser",
+  "description": "Module that has utilities for URI parsing",
+  "version": "1.0.1",
+  "author": "Stuart Hudson <goulash1971@gmail.com>",
+  "keywords": [
+    "uri",
+    "parser"
+  ],
+  "homepage": "https://github.com/goulash1971/uri-parser",
+  "contributors": [
+    "Stuart Hudson <goulash1971@gmail.com> (http://goulash1971.com/)"
+  ],
+  "scripts": {
+    "test": "make test"
+  },
+  "directories": {
+    "lib": "lib/",
+    "test": "tests/"
+  },
+  "main": "./index",
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/goulash1971/uri-parser.git"
+  },
+  "licenses": [
+    {
+      "type": "The MIT License",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ]
+}
