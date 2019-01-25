@@ -1,7 +1,7 @@
 export default reducer = (state={},action)=>{
     switch(action.type){
-        case 'reducer':
-            return {...state,post:action.payload}
+        case 'user_register':
+            return {...state,newUser:action.payload}
         default :
             return state;
     }
