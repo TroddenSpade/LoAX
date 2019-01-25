@@ -1,25 +1,28 @@
 import React from 'react';
+import {Provider} from 'react-redux';
+import Store from './src/redux/store'
 import { StyleSheet, Text, View } from 'react-native';
-import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
-export default class App extends React.Component {
+import reducer from './src/redux/reducer';
+import Signup from './src/screens/singup';
+
+class App extends React.Component {
   render() {
     return (
-      <ParallaxScrollView
-      backgroundColor="blue"
-      contentBackgroundColor="pink"
-      parallaxHeaderHeight={300}
-      renderForeground={() => (
-       <View style={{ height: 300, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text>Hello World!</Text>
-        </View>
-      )}>
-      <View style={{ height: 500 }}>
-        <Text>Scroll me</Text>
+      <View style={styles.container}>
+        <Signup/>
       </View>
-    </ParallaxScrollView>
+
     );
   }
+}
+
+export default reduxApp = ()=>{
+  return(
+    <Provider store={Store(reducer)}>
+      <App/>
+    </Provider>
+  )
 }
 
 const styles = StyleSheet.create({
