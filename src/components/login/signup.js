@@ -3,7 +3,7 @@ import { View , Text , Button , TextInput ,StyleSheet } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {registerUser} from '../redux/action/login';
+import {registerUser} from '../../redux/action/login';
 
 class Signup extends React.Component{
     state={
@@ -77,7 +77,6 @@ class Signup extends React.Component{
 }
 
 const mapStateToProps =(state)=>{
-    console.log(state);
     return{
         reducer:state.reducer,
     }

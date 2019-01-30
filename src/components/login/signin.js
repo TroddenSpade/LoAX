@@ -3,8 +3,8 @@ import { View , Text , Button , TextInput ,StyleSheet } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {signinUser} from '../redux/action/login';
-import { setTokens } from '../misc';
+import {signinUser} from '../../redux/action/login';
+
 
 class Signin extends React.Component{
     state={
@@ -26,16 +26,10 @@ class Signin extends React.Component{
     }
 
     doAction = ()=>{
-        this.props.signinUser(this.state).then(
-                        ()=>this.manageAccess());
+        this.props.signinUser(this.state);
     }
 
-    manageAccess =()=>{
-        if(!this.props.userData.userid){
-            alert("Can not Sign in !");
-        }
-        setTokens(this.props.userData,()=>{console.log("it Works")});
-    }
+
 
     render(){
         return(
@@ -75,9 +69,10 @@ class Signin extends React.Component{
 }
 
 const mapStateToProps =(state)=>{
-    console.log(state.Reducer)
+    // console.log("state")
+    // console.log(state)
     return{
-        Reducer:state.Reducer,
+        login:state.login,
     }
 }
 
