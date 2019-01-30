@@ -2,8 +2,7 @@ export default login = (state={},action)=>{
     switch(action.type){
         case 'user_register':
             return {
-                ...state,
-                userData:{
+                newUser:{
                     userid:action.payload.localId,
                     token:action.payload.idToken,
                     refreshToken:action.payload.refreshToken,
@@ -11,7 +10,6 @@ export default login = (state={},action)=>{
             }
         case 'user_signin':
             return {
-                ...state,
                 userData:{
                     userid:action.payload.localId,
                     token:action.payload.idToken,
