@@ -33,6 +33,11 @@ class Signup extends React.Component{
 
     doAction = ()=>{
         this.props.registerUser(this.state)
+        .then(()=>this.props.navigation.navigate('signIn'))
+        .catch( (e)=>{
+            console.log(e);
+            alert("cannot Sign up");
+        })
         
     }
 
@@ -78,7 +83,7 @@ class Signup extends React.Component{
 
 const mapStateToProps =(state)=>{
     return{
-        reducer:state.reducer,
+        login:state,
     }
 }
 
