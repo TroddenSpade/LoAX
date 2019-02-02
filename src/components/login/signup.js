@@ -4,15 +4,23 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {registerUser} from '../../redux/action/login';
+import {addUser} from './addUser';
 
 class Signup extends React.Component{
     state={
+        username:'',
         email:'',
         password:'',
         confirmPassword:'',
     }
 
-    changeUserHandler = (email)=>{
+    changeUserHandler = (username)=>{
+        this.setState({
+            username,
+        })
+    }
+
+    changeEmailHandler = (email)=>{
         this.setState({
             email,
         })
@@ -33,22 +41,33 @@ class Signup extends React.Component{
 
     doAction = ()=>{
         this.props.registerUser(this.state)
-        .then(()=>this.props.navigation.navigate('signIn'))
         .catch( (e)=>{
             console.log(e);
             alert("cannot Sign up");
         })
-        
     }
 
     render(){
+        if(this.props.newUser){
+            if(this.props.newUser.userid)   
+                addUser(this.state,this.props.newUser);
+        }
         return(
             <View style={styles.container}>
+
+                <View style={styles.block}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="username"
+                        onChangeText={this.changeUserHandler}
+                    />
+                </View>
+
                 <View style={styles.block}>
                     <TextInput
                         style={styles.input}
                         placeholder="email"
-                        onChangeText={this.changeUserHandler}
+                        onChangeText={this.changeEmailHandler}
                     />
                 </View>
                 
@@ -83,12 +102,12 @@ class Signup extends React.Component{
 
 const mapStateToProps =(state)=>{
     return{
-        login:state,
+        newUser:state.login.newUser,
     }
 }
 
 const mapDispatchToProsp =(dispatch)=>{
-    return bindActionCreators({registerUser},dispatch);
+    return bindActionCreators({registerUser, },dispatch);
 }
 
 export default connect(mapStateToProps,mapDispatchToProsp)(Signup)
