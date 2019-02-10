@@ -18,23 +18,22 @@ class Main extends React.Component{
         getTokens((value)=>{
             if(value[0][1]== null)  this.setState({loading:false})
             else{
-                this.props.exchangeToken(value[1][1]).then(
-                    ()=>{ this.setState({loading:false,login:false}) })
+                this.props.exchangeToken(value[1][1])
+                .then( ()=>{ this.setState({loading:false,login:false}) })
+                .catch((e)=>{ if(e!=null) this.setState({loading:false}) })
             }
         });
     }
 
     render(){
         if(this.state.loading)  return(<Loading/>)
-        console.log(this.props.login)
         if(this.props.login.userData){
-            console.log(this.props.login.userData);
             if(this.props.login.userData.userid){
                 setTokens(this.props.login.userData,()=>{ console.log("itworks!") });
                 return <Views/>
-            }else    
-                console.log("invalid Sign In");
-        }else{
+            }
+        }
+        if(this.state.login){
             return <Login/>
         }
     }
