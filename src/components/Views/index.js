@@ -1,15 +1,16 @@
 import React from 'react';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator, createAppContainer,createStackNavigator } from 'react-navigation';
 import {Entypo,SimpleLineIcons,AntDesign,MaterialIcons} from '@expo/vector-icons';
 
 import Fav from './fav';
-import Home from './home';
+import Home from './Home/home';
 import Profile from './profile';
 import Location from './location';
 import Like from './like';
 
+import Parallax from '../logic/parallax'
 
-export default TabNavigation = createAppContainer(createBottomTabNavigator({
+TabNavigation = createAppContainer(createBottomTabNavigator({
   location: {
     screen:Location,
     navigationOptions: () => ({
@@ -87,3 +88,28 @@ export default TabNavigation = createAppContainer(createBottomTabNavigator({
   }
 
 }));
+
+
+
+const RootStack = createStackNavigator(
+  {
+    Main:{
+      screen:TabNavigation,
+    },
+    Parallax:{
+      screen: Parallax,
+    }
+  },
+  {
+    initialRouteName: 'Main',
+    headerMode:'none'
+  }
+);
+
+const AppContainer = createAppContainer(RootStack);
+
+export default class Navigation extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
+}
