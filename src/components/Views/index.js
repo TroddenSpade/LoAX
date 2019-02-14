@@ -1,18 +1,23 @@
 import React from 'react';
 import { createBottomTabNavigator, createAppContainer,createStackNavigator } from 'react-navigation';
 import {Entypo,SimpleLineIcons,AntDesign,MaterialIcons} from '@expo/vector-icons';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import Fav from './fav';
 import Home from './Home/home';
-import Profile from './profile';
-import Location from './location';
-import Like from './like';
+import ProfileTab from './profile/profileTab';
+import LocationTab from './locationTab';
 
-import Parallax from '../logic/parallax'
+import Parallax from '../screens/parallax'
+import Profile from '../screens/profile'
+
+import { getPosts } from '../../redux/action/getPosts';
+import { getMyData,getMyPosts } from '../../redux/action/getMyProfile';
+
 
 TabNavigation = createAppContainer(createBottomTabNavigator({
   location: {
-    screen:Location,
+    screen:LocationTab,
     navigationOptions: () => ({
       tabBarIcon: ({tintColor}) => (
           <Entypo
@@ -20,18 +25,6 @@ TabNavigation = createAppContainer(createBottomTabNavigator({
               color={tintColor}
               size={30}
           />
-      )
-    })
-  },
-
-  like :{
-    screen:Like,
-    navigationOptions: () => ({
-      tabBarIcon: ({tintColor}) => (
-          <SimpleLineIcons
-              name="like"
-              color={tintColor}
-              size={33}/>
       )
     })
   },
@@ -49,21 +42,8 @@ TabNavigation = createAppContainer(createBottomTabNavigator({
     })
   },
 
-  fav :{
-    screen:Fav,
-    navigationOptions: () => ({
-      tabBarIcon: ({tintColor}) => (
-          <MaterialIcons
-              name="favorite-border"
-              color={tintColor}
-              size={40}
-          />
-      )
-    })
-  },
-
   profile :{
-    screen:Profile,
+    screen:ProfileTab,
     navigationOptions: () => ({
       tabBarIcon: ({tintColor}) => (
           <AntDesign
@@ -98,6 +78,9 @@ const RootStack = createStackNavigator(
     },
     Parallax:{
       screen: Parallax,
+    },
+    Profile:{
+      screen : Profile,
     }
   },
   {
@@ -108,8 +91,26 @@ const RootStack = createStackNavigator(
 
 const AppContainer = createAppContainer(RootStack);
 
-export default class Navigation extends React.Component {
+class Navigation extends React.Component {
+  componentWillMount(){
+    this.props.getPosts();
+    this.props.getMyData(this.props.userid);
+    this.props.getMyPosts(this.props.userid);
+  }
+
   render() {
     return <AppContainer />;
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    userid:state.login.userData.userid,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({getPosts,getMyPosts,getMyData},dispatch)
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Navigation);
