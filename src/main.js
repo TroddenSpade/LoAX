@@ -14,7 +14,7 @@ class Main extends React.Component{
         login:true,
     }
 
-    componentDidMount(){
+    componentWillMount(){
         getTokens((value)=>{
             if(value[0][1]== null)  this.setState({loading:false})
             else{
