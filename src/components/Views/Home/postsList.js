@@ -16,7 +16,7 @@ export default List =(props)=>{
     <View style={{borderBottomColor: 'lightgrey',borderBottomWidth:1,}}>
         <View style={{flexDirection:'column'}}> 
             <TouchableWithoutFeedback
-            onLongPress={() => {props.handler()}}
+            onLongPress={() => {props.locationHandler()}}
             delayLongPress={1500}
             >
                 <Image 
@@ -24,7 +24,7 @@ export default List =(props)=>{
                 source={{uri:props.posts.url}}/>
             </TouchableWithoutFeedback>  
 
-            <TouchableOpacity style={styles.locationBar} onPress={() => {props.handler()}}>
+            <TouchableOpacity style={styles.locationBar} onPress={() => {props.locationHandler()}}>
             <View style={{flexDirection:'row',alignContent:'center',justifyContent: 'center'}}>
                 <Entypo name="location-pin" size={24} color="white"/>
                 <Text style={{fontSize:20 ,color:"white"}}>LOCATION</Text>
@@ -33,7 +33,7 @@ export default List =(props)=>{
         </View>
 
         <View style={styles.profile}>     
-            <TouchableOpacity style={styles.profile}>
+            <TouchableOpacity style={styles.profile} onPress={() => {props.profileHandler()}}>
             <Image 
                 style={styles.avatar}
                 source={{uri:props.posts.avatar}}/>
