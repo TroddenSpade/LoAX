@@ -4,7 +4,7 @@ export default posts=(state={loading:true},action)=>{
             return Object.assign({},state,{loading:true})
 
         case 'POSTS_SUCCESS':
-                return Object.assign({}, state, { list: action.payload, loading: false })
+                return Object.assign({}, state, { list: action.payload, loading: false,lastKey:action.lastKey })
 
         case 'POSTS_ERROR':
             return Object.assign({},state,{loading:true})
