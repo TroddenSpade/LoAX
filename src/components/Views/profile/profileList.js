@@ -5,48 +5,32 @@ import {
      Text,
      TouchableOpacity,
      StyleSheet,
-     Dimensions } from 'react-native';
-
+     Dimensions
+    ,ImageBackground
+ } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const screenWidth = Dimensions.get("window").width;
 
 export default ProfileList=(props)=>{
-    const list = props.data.map((item)=>{
-        return(
-            <View key={item.id} style={styles.block}>
-                <TouchableOpacity style={styles.inside}>
-                <View><Image style={styles.images} source={{uri :item.url}}/></View>
-                <View style={{justifyContent:'center'}}><Text>likes</Text></View>
-                <View style={{justifyContent:'center'}}><Text>location</Text></View>
-                </TouchableOpacity>
-            </View>
-        )
-    })
-    return(
-        <View>
-            <View style={styles.profile}>
-
-            <View style={styles.avatar}>
-                <View style={{alignItems:'center'}}>
-                <Image style={styles.imagePro} source={{uri :props.user[0].image}}/>
-                </View>
-                
-                <View style={styles.username}>
-                <Text style={{fontSize:20,color:'green'}}>{props.user[0].username}</Text>
-                </View>
-            </View>
-
-            </View>
-
-            <View>{list}</View>
+    console.log(props.data)
+    const list = props.data.map((item,id)=>(
+        <View key={id} style={styles.block}>
+            <ImageBackground source={{uri:item.url}} style={{width: '100%', height:100}} blurRadius={1}>
+            <TouchableOpacity style={styles.inside}>
+            <View><Image style={styles.images} source={{uri :item.url}}/></View>
+            <View style={{alignItems: "center",justifyContent:'center',backgroundColor: "lightgreen"}}><Text>likes</Text></View>
+            <View style={{alignItems: "center",justifyContent:'center',backgroundColor: "lightgreen"}}><Text>location</Text></View>
+            </TouchableOpacity>
+            </ImageBackground>
         </View>
-
-    )
+    ))
+    return list;
 }
 
 const styles=StyleSheet.create({
     block:{
-        height:90,
+        height:100,
         borderColor: 'lightgrey',
         borderBottomWidth:1, 
     },
@@ -54,25 +38,27 @@ const styles=StyleSheet.create({
         marginLeft: 2,
         marginRight: 10,
         flexDirection:"row",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     images:{
-        width:90,
-        height: 90,
+        width:100,
+        height: 100,
         borderRadius: 10,
+        justifyContent: "center"
     },
     profile:{
         width:screenWidth,
         height: 300,
         borderBottomColor: 'green',
         borderBottomWidth: 2,
-        flexDirection: 'row',
-        alignItems: 'center'
+        flexDirection: 'column',
+        padding: 40,
     },
     avatar:{
         flex: 1,
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: "center"
     },
     imagePro:{
         height:100,
@@ -85,5 +71,10 @@ const styles=StyleSheet.create({
         alignItems: 'center',
         paddingTop: 10,
 
+    },
+    settings:{
+        flexDirection: "row",
+        justifyContent:"flex-end",
+    
     }
 })
