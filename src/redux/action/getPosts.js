@@ -10,7 +10,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 
-export const getPosts=(lastKey)=>{
+export const getPosts=(lastKey=null)=>{
     // if(tag==null){
     //     let URL = `${FireBase}/post.json`;
     // }else{
@@ -49,14 +49,16 @@ export const getPosts=(lastKey)=>{
         return async (dispatch , getState)=>{
             let posts=[];
             let arrayOfKeys =[];
-            dispatch({type:'START_LOADING'});
             firebase.database().ref(`post`)
             .orderByKey()
             .startAt(lastKey)
-            .limitToFirst(5)
+            .limitToFirst(6)
             .once(`value`)
             .then(async (snapshot) => {
+                let count = 0;
                 for(let key in snapshot.val()){
+                    count ++;
+                    if (count == 1) continue;
                     await firebase.database().ref(`user/${snapshot.val()[key].userid}`)
                     .once(`value`)
                     .then(async (snapshot2)=>{
@@ -69,8 +71,9 @@ export const getPosts=(lastKey)=>{
                     })
                 }
                 arrayOfKeys= Object.keys(snapshot.val())
+                console.log(arrayOfKeys)
                 return posts
-            }).then((response)=>dispatch({type:'POSTS_SUCCESS',payload:response,lastKey:arrayOfKeys[4]}))
+            }).then((response)=>dispatch({type:'POSTS_ADDED',payload:response,lastKey:arrayOfKeys[5]}))
             .catch((e)=>dispatch({type:'POSTS_ERROR',error:e}))
             
         }
