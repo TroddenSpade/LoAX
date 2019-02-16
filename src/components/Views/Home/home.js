@@ -6,6 +6,7 @@ import {
    Image,
    ScrollView, } from "react-native";
 import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
 import { Font } from 'expo';
 
 import Loading from '../../screens/loading';
@@ -15,11 +16,12 @@ import List from './postsList';
 class Home extends React.Component {
 
   state={
-    fontLoaded: false
+    fontLoaded: false,
+    loadposts:false,
+    scrollY:2000,
   }
 
-  async componentDidMount() {
-    this.props.getPosts();
+  async componentWillMount(){
     await Font.loadAsync({
       'Pacifico-Regular': require('../../../../assets/fonts/Pacifico-Regular.ttf'),
     });
@@ -28,11 +30,28 @@ class Home extends React.Component {
 
   list = ()=>(
     this.props.list.map((item,id)=>(
-    <List key={id} posts={item}
-    handler={() => this.props.navigation.navigate('Parallax',{data:item})}/>
+    <List  
+      key={id} posts={item}
+      locationHandler={() => this.props.navigation.navigate('Parallax',{data:item})}
+      profileHandler={()=>this.props.navigation.navigate('Profile',{data:item.userid})}/>
     ))
   )
 
+  handleScroll=(event)=>{
+    if(event.nativeEvent.contentOffset.y > this.state.scrollY
+       && !this.state.loadposts
+       && this.props.lastKey!=undefined){
+      this.setState({loadposts:true});
+      this.props.getPosts(this.props.lastKey)
+      .then(()=>{
+        this.setState({
+          loadposts:false,
+          scrollY:this.state.scrollY+2000,
+        });
+      })
+    }
+  }
+  
   render() {
     return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -40,7 +59,7 @@ class Home extends React.Component {
         <View>
         {this.state.fontLoaded ? (
           <Text style={styles.logoText}>
-          l<Image style={styles.logo} source={require('../../../utils/LoAX.png')}/>ax
+          l<Image style={styles.logo} source={require('../../../utils/LoAX.png')}/>AX
           </Text> 
           ) : null}
         </View>
@@ -50,7 +69,7 @@ class Home extends React.Component {
      {this.props.isLoading?
         <Loading/>
       :
-      <ScrollView>
+      <ScrollView onScroll={this.handleScroll}>
         {this.list()}
       </ScrollView>}
     
@@ -64,13 +83,12 @@ function mapStateToProps(state) {
   return {
       list: state.posts.list,
       isLoading: state.posts.loading,
+      lastKey:state.posts.lastKey,
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-      getPosts: () => dispatch(getPosts())
-  }
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({getPosts},dispatch);
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(Home);
