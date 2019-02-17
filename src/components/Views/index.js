@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator, createAppContainer,createStackNavigator } from 'react-navigation';
-import {Entypo,SimpleLineIcons,AntDesign,MaterialIcons} from '@expo/vector-icons';
+import { Entypo,AntDesign } from '@expo/vector-icons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -8,8 +8,9 @@ import Home from './Home/home';
 import ProfileTab from './profile/profileTab';
 import LocationTab from './locationTab';
 
-import Parallax from '../screens/parallax'
-import Profile from '../screens/profile'
+import Parallax from '../screens/parallax';
+import Profile from '../screens/profile';
+import AddPost from './AddPost/index';
 
 import { getPosts } from '../../redux/action/getPosts';
 import { getMyData,getMyPosts } from '../../redux/action/getMyProfile';
@@ -81,6 +82,9 @@ const RootStack = createStackNavigator(
     },
     Profile:{
       screen : Profile,
+    },
+    AddPost:{
+      screen: AddPost,
     }
   },
   {
