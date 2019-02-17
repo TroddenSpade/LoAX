@@ -1,5 +1,5 @@
 import React from 'react';
-import { View , Text , Button , TextInput ,StyleSheet } from 'react-native';
+import { View , Text , Button , TextInput ,StyleSheet, KeyboardAvoidingView } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -33,7 +33,7 @@ class Signin extends React.Component{
 
     render(){
         return(
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <View style={styles.block}>
                     <TextInput
                         style={styles.input}
@@ -62,7 +62,7 @@ class Signin extends React.Component{
                         onPress={() => this.props.navigation.navigate('signUp')}
                     />
                 </View>
-            </View>
+            </KeyboardAvoidingView>
 
         )
     }

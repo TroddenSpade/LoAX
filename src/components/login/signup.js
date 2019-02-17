@@ -1,5 +1,5 @@
 import React from 'react';
-import { View , Text , Button , TextInput ,StyleSheet } from 'react-native';
+import { View , Text , Button , TextInput ,StyleSheet, KeyboardAvoidingView } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -53,7 +53,7 @@ class Signup extends React.Component{
                 addUser(this.state,this.props.newUser);
         }
         return(
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 
                 <View style={styles.block}>
                     <TextInput
@@ -94,7 +94,7 @@ class Signup extends React.Component{
                     onPress={this.doAction}
                 />
                 
-            </View>
+            </KeyboardAvoidingView>
 
         )
     }
