@@ -4,7 +4,9 @@ import {
    Text,
    StyleSheet,
    Image,
-   ScrollView, } from "react-native";
+   ScrollView,
+   TouchableOpacity
+} from "react-native";
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Font } from 'expo';
@@ -55,14 +57,23 @@ class Home extends React.Component {
   render() {
     return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      
       <View style={styles.topBar}>
+
+        <TouchableOpacity
+          onPress={()=>this.props.navigation.navigate('AddPost')}
+        ><Text>Camera</Text></TouchableOpacity>
+
         <View>
-        {this.state.fontLoaded ? (
-          <Text style={styles.logoText}>
-          l<Image style={styles.logo} source={require('../../../utils/LoAX.png')}/>AX
-          </Text> 
-          ) : null}
+          {this.state.fontLoaded ? (
+            <Text style={styles.logoText}>
+            l<Image style={styles.logo} source={require('../../../utils/LoAX.png')}/>AX
+            </Text> 
+            ) : null}
         </View>
+
+        <View><Text>Search</Text></View>
+
       </View>
 
       
@@ -105,7 +116,7 @@ const styles =StyleSheet.create({
   },
   topBar:{
     flexDirection:"row",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
     width:"100%",
     borderBottomWidth:2,
