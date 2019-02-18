@@ -24,6 +24,24 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.loax"
+    }
+  },
+  "android": {
+    "package": "com.loax",
+    "config": {
+      "googleMaps": {
+        "apiKey": "AIzaSyCytCAlrM-C-Q0QRvhcakLmtDLZuUYa7h4"
+      }
     }
   }
+  
 }
+
+
+
+
+
+  
