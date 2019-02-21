@@ -10,12 +10,16 @@ import {
   KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator,createAppContainer } from 'react-navigation';
 import * as firebase from 'firebase';
+import { connect } from 'react-redux';
+import axios from 'axios';
 import uuid from 'uuid';
 
+import Home from '../Home/home';
 import AddLocation from './addLocation';
 import AddLocSmall from './addLocSmall';
 import AddPicture from './addPicture';
 
+import { OpenCage , FireBase ,OpenCageAPI } from '../../../utils/links';
 
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height - 65;
@@ -29,7 +33,8 @@ class AddPost extends React.Component{
       latitudeDelta: 0.0202,
       longitudeDelta: 0.0149,
     },
-    disc:null,
+    disc:'',
+    loading:false,
   }
 
   locationHandler=(location)=>{
@@ -61,21 +66,35 @@ class AddPost extends React.Component{
       xhr.open('GET', uri, true);
       xhr.send(null);
     });
-  
     const ref = firebase
       .storage()
       .ref()
-      .child(uuid.v4());
+      .child('images/' + uuid.v4());
     const snapshot = await ref.put(blob);
-  
     // We're done with the blob, close and release it
     blob.close();
-  
     return await snapshot.ref.getDownloadURL();
   }
 
-  uploadImage = async(uri) => {
-    uploadUrl = await this.uploadImageAsync(uri);
+  post = async(uri) => {
+    const uploadUrl = await this.uploadImageAsync(uri);
+    const postId = 9999999999999 - (new Date()).getTime();
+    const address = await axios(`${OpenCage}?q=${this.state.location.latitude}+${this.state.location.longitude}&key=${OpenCageAPI}`)
+    .then(response=>response.data.results[0].formatted);
+    await axios({
+      method: 'PUT',
+      url: `${FireBase}/post/${postId}.json?auth=${this.props.token}`,
+      data: {
+        url:uploadUrl,
+        disc:this.state.disc,
+        region : this.state.location,
+        userid:this.props.userid,
+        address,
+      },
+    }).then(()=>{alert("done!")})
+      .catch(()=>{alert("error")});
+
+    this.props.navigation.navigate('Home');
   }
 
   render(){
@@ -84,7 +103,7 @@ class AddPost extends React.Component{
       <View style={styles.container}>
         <View style={styles.button}>
           <Button
-          onPress={()=>this.uploadImage(this.state.image)}
+          onPress={()=>this.post(this.state.image)}
           title="Post"
           color="lightgreen"/>
         </View> 
@@ -113,16 +132,29 @@ class AddPost extends React.Component{
   }
 }
 
-RootStack = createStackNavigator(
+const mapStateToProps =(store)=>{
+  console.log(store)
+  return{
+    userid:store.login.userData.userid,
+    token:store.login.userData.token,
+  }
+}
+
+const AddPostConnect =connect(mapStateToProps,null)(AddPost);
+
+export default RootStack = createStackNavigator(
   {
     AddPost:{
-      screen:AddPost,
+      screen:AddPostConnect,
     },
     AddLocation:{
       screen: AddLocation,
     },
     AddPicture:{
       screen : AddPicture,
+    },
+    Home:{
+      screen:Home,
     }
   },
   {
@@ -130,17 +162,6 @@ RootStack = createStackNavigator(
     headerMode:'none'
   }
 );
-
-const AppContainer = createAppContainer(RootStack);
-
-export default class Index extends React.Component{
-  render(){
-    return (
-      <AppContainer/>
-    )
-  }
-  
-}
 
 
 const styles = StyleSheet.create({
