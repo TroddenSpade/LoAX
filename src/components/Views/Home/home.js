@@ -5,10 +5,12 @@ import {
    StyleSheet,
    Image,
    ScrollView,
+   RefreshControl,
    TouchableOpacity
 } from "react-native";
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
+import { Feather,AntDesign } from '@expo/vector-icons';
 import { Font } from 'expo';
 
 import Loading from '../../screens/loading';
@@ -21,6 +23,7 @@ class Home extends React.Component {
     fontLoaded: false,
     loadposts:false,
     scrollY:2000,
+    refreshing:false,
   }
 
   async componentWillMount(){
@@ -54,6 +57,11 @@ class Home extends React.Component {
     }
   }
   
+  onRefresh = () => {
+    this.setState({refreshing: true});
+    setTimeout(()=>{this.setState({refreshing: false});},4000)
+  }
+
   render() {
     return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -61,8 +69,12 @@ class Home extends React.Component {
       <View style={styles.topBar}>
 
         <TouchableOpacity
-          onPress={()=>this.props.navigation.navigate('AddPost')}
-        ><Text>Camera</Text></TouchableOpacity>
+          onPress={()=>this.props.navigation.navigate('AddPost')}>
+            <Feather
+              name="camera"
+              color={"grey"}
+              size={30}/>
+          </TouchableOpacity>
 
         <View>
           {this.state.fontLoaded ? (
@@ -72,7 +84,13 @@ class Home extends React.Component {
             ) : null}
         </View>
 
-        <View><Text>Search</Text></View>
+        <TouchableOpacity
+          onPress={()=>this.props.navigation.navigate('')}>
+            <AntDesign
+              name="search1"
+              color={"grey"}
+              size={30}/>
+          </TouchableOpacity>
 
       </View>
 
@@ -80,7 +98,14 @@ class Home extends React.Component {
      {this.props.isLoading?
         <Loading/>
       :
-      <ScrollView onScroll={this.handleScroll}>
+      <ScrollView
+      onScroll={this.handleScroll}
+      refreshControl={
+        <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh}
+        colors={["#19649E", "#469976", "#72CE4E","#489C74"]}/>
+      }>
         {this.list()}
       </ScrollView>}
     
