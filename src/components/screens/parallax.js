@@ -14,7 +14,7 @@ export default class Parallax extends React.Component{
             <ParallaxScrollView
             backgroundColor="white"
             contentBackgroundColor="white"
-            parallaxHeaderHeight={700}
+            parallaxHeaderHeight={100}
             renderForeground={() => (
                 <LocationComponent location={data.region}/>
             )}>

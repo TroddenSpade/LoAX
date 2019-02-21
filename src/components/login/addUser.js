@@ -1,19 +1,18 @@
 import axios from 'axios';
-
-const FireBaseUser=`https://loax-70d8e.firebaseio.com/user`;
+import { FireBaseUser,uiAvatar } from '../../utils/links';
 
 export const addUser=(state,store)=>{
-    request = axios({
+    console.log(store);
+    axios({
         method: 'PUT',
-        url: `${FireBaseUser}/${store.userid}.json?auth=${store.token}`,
+        url: `${FireBaseUser}/${store.localId}.json?auth=${store.idToken}`,
         data: {
             email:state.email,
-            userid:store.userid,
-            refreshToken:store.refreshToken,
+            userid:store.localId,
             username:state.username,
-            "pic":"",
+            "pic":`${uiAvatar}${state.username}`,
             "bio":""
         },
         config: { headers: {'Content-Type': 'multipart/form-data' }}
-    }).then(()=>console.log(request))
+    }).catch(e=>console.log(e.response))
 }

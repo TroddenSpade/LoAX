@@ -1,8 +1,10 @@
 import axios from 'axios';
 
+import { FireBaseUser,FireBasePost } from '../../utils/links';
+
 export const getProfile =(userid)=>{
-    const URLPOSTS = `https://loax-70d8e.firebaseio.com/post.json/?orderBy=\"userid\"&equalTo=\"${userid}\"`
-    const URLPROFILE = `https://loax-70d8e.firebaseio.com/user/${userid}.json`;
+    const URLPOSTS = `${FireBasePost}.json/?orderBy=\"userid\"&equalTo=\"${userid}\"`
+    const URLPROFILE = `${FireBaseUser}/${userid}.json`;
 
     return (dispatch,getstate)=>{
         dispatch({type:"PROFILE_LOADING_START"});

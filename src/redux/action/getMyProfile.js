@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+import { FireBaseUser,FireBasePost } from '../../utils/links';
 
 export const getMyPosts =(userid)=>{
-    const URL = `https://loax-70d8e.firebaseio.com/post.json/?orderBy=\"userid\"&equalTo=\"${userid}\"`
+    const URL = `${FireBasePost}.json/?orderBy=\"userid\"&equalTo=\"${userid}\"`
     const request = axios(URL)
     .then(response => {
         let posts=[];
@@ -22,7 +23,7 @@ export const getMyPosts =(userid)=>{
 }
 
 export const getMyData =(userid)=>{
-    const URL = `https://loax-70d8e.firebaseio.com/user/${userid}.json`;
+    const URL = `${FireBaseUser}/${userid}.json`;
     const request = axios(URL).then(response => response.data);
 
     return{

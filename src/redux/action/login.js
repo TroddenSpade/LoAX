@@ -1,9 +1,7 @@
 import axios from 'axios';
-const API =`AIzaSyCytCAlrM-C-Q0QRvhcakLmtDLZuUYa7h4`;
-const FireBase=`https://loax-70d8e.firebaseio.com/`;
-const Register =`https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=`;
-const Signin =`https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=`;
-const Exchange =`https://securetoken.googleapis.com/v1/token?key=`;
+
+import {addUser} from '../../components/login/addUser';
+import { API,Register,Signin,Exchange } from '../../utils/links';
 
 export const registerUser =(data)=>{
     const request = axios({
@@ -17,7 +15,10 @@ export const registerUser =(data)=>{
         headers:{
             "Content-Type":"application/json"
         }
-    }).then(response => response.data);
+    }).then(response =>{
+        addUser(data,response.data);
+        return response.data;
+    } );
 
     return{
         type:"user_register",
@@ -37,7 +38,8 @@ export const signinUser=(data)=>{
         headers:{
             "Content-Type":"application/json"
         }
-    }).then(response => response.data);
+    }).then(response => response.data)
+    .catch(e=>console.log(e));
 
     return{
         type:"user_signin",
@@ -53,7 +55,8 @@ export const exchangeToken=(refreshToken)=>{
         headers:{
             "Content-Type":"application/x-www-form-urlencoded"
         }
-    }).then(response => response.data);
+    }).then(response => response.data).catch(e=>console.log(e));
+
 
     return{
         type:"exchange_token",

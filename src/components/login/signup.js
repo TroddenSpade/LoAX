@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {registerUser} from '../../redux/action/login';
-import {addUser} from './addUser';
 
 class Signup extends React.Component{
     state={
@@ -41,6 +40,7 @@ class Signup extends React.Component{
 
     doAction = ()=>{
         this.props.registerUser(this.state)
+        .then(()=>this.props.navigation.navigate('signIn'))
         .catch( (e)=>{
             console.log(e);
             alert("cannot Sign up");
@@ -48,10 +48,6 @@ class Signup extends React.Component{
     }
 
     render(){
-        if(this.props.newUser){
-            if(this.props.newUser.userid)   
-                addUser(this.state,this.props.newUser);
-        }
         return(
             <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 

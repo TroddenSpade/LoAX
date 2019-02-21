@@ -1,15 +1,5 @@
 import * as firebase from 'firebase';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDt3RD0Jh7L_KVfh8wj765XPveyeeLEc0c",
-    authDomain: "loax-70d8e.firebaseapp.com",
-    databaseURL: "https://loax-70d8e.firebaseio.com",
-    storageBucket: "loax-70d8e.appspot.com"
-};
-  
-firebase.initializeApp(firebaseConfig);
-
-
 export const getPosts=(lastKey=null)=>{
     // if(tag==null){
     //     let URL = `${FireBase}/post.json`;
