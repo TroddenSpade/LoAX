@@ -19,3 +19,12 @@ export const getTokens=(func)=>{
         '@LoAX@userid'
     ]).then(response => func(response));
 }
+
+export const removeToken =(CBfunction)=>{
+    AsyncStorage.multiRemove([
+        '@LoAX@token',
+        '@LoAX@refereshToken',
+        '@LoAX@expireToken',
+        '@LoAX@userid'
+    ]).then(()=>CBfunction());
+}
