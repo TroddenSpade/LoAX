@@ -1,17 +1,17 @@
 import * as firebase from 'firebase';
 
-export const getPosts=(lastKey=null)=>{
+export const getPosts=(lastKey)=>{
     // if(tag==null){
     //     let URL = `${FireBase}/post.json`;
     // }else{
     //     let URL =`${FireBase}`;
     // }
 
-    if(lastKey == null){
+    if(lastKey == null || lastKey == ""){
         return async (dispatch , getState)=>{
             let posts=[];
             let arrayOfKeys =[];
-            dispatch({type:'START_LOADING'});
+            if(lastKey == null) dispatch({type:'START_LOADING'});
             firebase.database().ref(`post`)
             .orderByKey()
             .limitToFirst(5)
