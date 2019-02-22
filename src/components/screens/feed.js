@@ -9,10 +9,17 @@ import {
 import {Entypo,SimpleLineIcons,AntDesign,MaterialIcons} from '@expo/vector-icons';
 
 const screenWidth = Dimensions.get("window").width;
+const height = Dimensions.get('window').height;
 
 export default Feed =(props)=>{
     return(
     <View style={{borderBottomColor: 'lightgrey',borderBottomWidth:1,}}>
+        <View style={styles.topbar}>
+            <Text style={{color:"white"}}>PULL<AntDesign name="caretup" size={30} color='white'/>UP</Text>
+        </View>
+        <View style={styles.address}>
+            <Text>{props.posts.address}</Text>
+        </View>
         <View style={{flexDirection:'column'}}> 
             <Image 
             style={styles.images}
@@ -79,7 +86,13 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'center'
     },
-    catption:{
-
+    address:{
+        height:40,
+    },
+    topbar:{
+        height: 25,
+        flex: 1,
+        backgroundColor: "lightgreen",
+        justifyContent: "center",
     }
 })
