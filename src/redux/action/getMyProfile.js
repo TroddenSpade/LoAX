@@ -1,21 +1,11 @@
 import axios from 'axios';
+import * as firebase from 'firebase';
 
-import { FireBaseUser,FireBasePost } from '../../utils/links';
+import { FireBaseUser } from '../../utils/links';
 
 export const getMyPosts =(userid)=>{
-    const URL = `${FireBasePost}.json/?orderBy=\"userid\"&equalTo=\"${userid}\"`
-    const request = axios(URL)
-    .then(response => {
-        let posts=[];
-
-        for(let key in response.data){
-            posts.push({
-                ...response.data[key],
-            })
-        }
-        return posts
-    });
-
+    const request = firebase.database().ref(`post`).orderByChild('userid').equalTo(userid)
+    .once(`value`).then((snapshot)=>Object.values(snapshot.val()));
     return{
         type:"MY_POSTS_SUCCESSFUL",
         payload:request
