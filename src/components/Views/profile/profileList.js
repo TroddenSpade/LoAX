@@ -1,31 +1,29 @@
 import React from 'react';
 import {
-     View, 
-     Image,
-     Text,
-     TouchableOpacity,
-     StyleSheet,
-     Dimensions
-    ,ImageBackground
- } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+    View, 
+    Image,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    Dimensions,
+    ScrollView,
+    ImageBackground
+} from 'react-native';
 
 const screenWidth = Dimensions.get("window").width;
 
 export default ProfileList=(props)=>{
-    console.log(props.data)
-    const list = props.data.map((item,id)=>(
-        <View key={id} style={styles.block}>
-            <ImageBackground source={{uri:item.url}} style={{width: '100%', height:100}} blurRadius={1}>
+    return(
+        <View style={styles.block}>
+            <ImageBackground source={{uri:props.data.url}} style={{width: '100%', height:100}} blurRadius={1}>
             <TouchableOpacity style={styles.inside}>
-            <View><Image style={styles.images} source={{uri :item.url}}/></View>
+            <View><Image style={styles.images} source={{uri :props.data.url}}/></View>
             <View style={{alignItems: "center",justifyContent:'center',backgroundColor: "lightgreen"}}><Text>likes</Text></View>
             <View style={{alignItems: "center",justifyContent:'center',backgroundColor: "lightgreen"}}><Text>location</Text></View>
             </TouchableOpacity>
             </ImageBackground>
         </View>
-    ))
-    return list;
+    )
 }
 
 const styles=StyleSheet.create({
