@@ -52,6 +52,23 @@ class AddPost extends React.Component{
     this.setState({image})
   }
 
+  stringToTag=(string)=>{
+    let tags = {};
+    const length = string.length;
+    for(let i=0 ; i<length;i++){
+      if(string[i]=='#'){
+        let tag='';
+        i++;
+        while(i<length && string[i]!=' '){
+          tag +=string[i];
+          i++;
+        }
+        Object.assign(tags,{[tag]:true});
+      }
+    }
+    return tags;
+  }
+
   async uploadImageAsync(uri) {
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -90,9 +107,10 @@ class AddPost extends React.Component{
         region : this.state.location,
         userid:this.props.userid,
         address,
+        tags:this.stringToTag(this.state.disc)
       },
     }).then(()=>{alert("done!")})
-      .catch(()=>{alert("error")});
+      .catch((e)=>{alert("error!")});
 
     this.props.navigation.navigate('Home');
   }
