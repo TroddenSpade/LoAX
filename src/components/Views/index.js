@@ -1,5 +1,10 @@
 import React from 'react';
-import { createBottomTabNavigator, createAppContainer,createStackNavigator } from 'react-navigation';
+import {
+  createBottomTabNavigator,
+  createAppContainer,
+  createStackNavigator,
+  createSwitchNavigator
+} from 'react-navigation';
 import { Entypo,AntDesign } from '@expo/vector-icons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -11,6 +16,7 @@ import LocationTab from './locationTab';
 import Parallax from '../screens/parallax';
 import Profile from '../screens/profile';
 import AddPost from './AddPost/index';
+import Login from '../login';
 
 import { getPosts } from '../../redux/action/getPosts';
 import { getMyData,getMyPosts } from '../../redux/action/getMyProfile';
@@ -93,7 +99,18 @@ const RootStack = createStackNavigator(
   }
 );
 
-const AppContainer = createAppContainer(RootStack);
+const RootNavigation = createSwitchNavigator({
+  RootStack:{
+    screen:RootStack,
+  },
+  Login:{
+    screen:Login,
+  }
+},{
+  initialRouteName: 'RootStack',
+});
+
+const AppContainer = createAppContainer(RootNavigation);
 
 class Navigation extends React.Component {
   componentWillMount(){
