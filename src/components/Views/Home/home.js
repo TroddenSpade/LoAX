@@ -22,7 +22,7 @@ class Home extends React.Component {
   state={
     fontLoaded: false,
     loadposts:false,
-    scrollY:2000,
+    scrollY:0,
     refreshing:false,
   }
 
@@ -58,8 +58,10 @@ class Home extends React.Component {
   }
   
   onRefresh = () => {
+    const REFRESH = "";
     this.setState({refreshing: true});
-    setTimeout(()=>{this.setState({refreshing: false});},4000)
+    this.props.getPosts(REFRESH)
+    .then(()=>{this.setState({refreshing:false,scrollY:0})});
   }
 
   render() {
