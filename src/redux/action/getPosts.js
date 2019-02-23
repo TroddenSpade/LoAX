@@ -1,12 +1,6 @@
 import * as firebase from 'firebase';
 
 export const getPosts=(lastKey)=>{
-    // if(tag==null){
-    //     let URL = `${FireBase}/post.json`;
-    // }else{
-    //     let URL =`${FireBase}`;
-    // }
-
     if(lastKey == null || lastKey == ""){
         return async (dispatch , getState)=>{
             let posts=[];

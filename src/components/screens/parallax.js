@@ -1,9 +1,11 @@
 import React from 'react'
-import { View,Text } from 'react-native'
+import { View,Text,Dimensions } from 'react-native'
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
 import LocationComponent from './locationComponent';
 import Feed from './feed';
+
+var height = Dimensions.get('window').height;
 
 export default class Parallax extends React.Component{
     render(){
@@ -14,7 +16,7 @@ export default class Parallax extends React.Component{
             <ParallaxScrollView
             backgroundColor="white"
             contentBackgroundColor="white"
-            parallaxHeaderHeight={100}
+            parallaxHeaderHeight={height - 65}
             renderForeground={() => (
                 <LocationComponent location={data.region}/>
             )}>

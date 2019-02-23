@@ -87,7 +87,7 @@ class Home extends React.Component {
         </View>
 
         <TouchableOpacity
-          onPress={()=>this.props.navigation.navigate('')}>
+          onPress={()=>this.props.navigation.navigate('Search')}>
             <AntDesign
               name="search1"
               color={"grey"}

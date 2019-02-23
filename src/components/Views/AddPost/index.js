@@ -134,8 +134,7 @@ class AddPost extends React.Component{
         maxLength={150}
         placeholder="Write A Caption"
         style={styles.caption}
-        onChangeText={(disc) => this.setState({disc})}
-        value={this.state.text}/>
+        onChangeText={(disc) => this.setState({disc})}/>
         </KeyboardAvoidingView>
         
 
