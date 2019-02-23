@@ -17,6 +17,7 @@ import Parallax from '../screens/parallax';
 import Profile from '../screens/profile';
 import AddPost from './AddPost/index';
 import Login from '../login';
+import Search from './search/search';
 
 import { getPosts } from '../../redux/action/getPosts';
 import { getMyData,getMyPosts } from '../../redux/action/getMyProfile';
@@ -91,6 +92,9 @@ const RootStack = createStackNavigator(
     },
     AddPost:{
       screen: AddPost,
+    },
+    Search:{
+      screen:Search
     }
   },
   {
