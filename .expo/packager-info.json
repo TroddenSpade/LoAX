@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 12283,
+  "expoServerNgrokUrl": "https://qx-cfi.anonymous.loax.exp.direct",
+  "packagerNgrokUrl": "https://packager.qx-cfi.anonymous.loax.exp.direct",
+  "ngrokPid": 12331
 }
