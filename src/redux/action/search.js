@@ -1,11 +1,13 @@
 import * as firebase from 'firebase';
 
 export const search=(lastKey,tag)=>{
-    if(lastKey == null || lastKey == ""){
+    const FIRST_LOAD = 0;
+    const RELOAD = -1;
+    if(lastKey == FIRST_LOAD || lastKey == RELOAD){
         return async (dispatch , getState)=>{
             let posts=[];
             let arrayOfKeys =[];
-            if(lastKey == null) dispatch({type:'SEARCH_START_LOADING'});
+            if(lastKey == FIRST_LOAD) dispatch({type:'SEARCH_START_LOADING'});
             firebase.database().ref(`post`)
             .orderByChild(`tags/${tag}`)
             .equalTo(true)
@@ -27,7 +29,7 @@ export const search=(lastKey,tag)=>{
                 arrayOfKeys= Object.keys(snapshot.val())
                 return posts
             }).then((response)=>dispatch({type:'SEARCH_POSTS_SUCCESS',payload:response,lastKey:arrayOfKeys[4]}))
-            .catch((e)=>dispatch({type:'SEARCH_POSTS_ERROR',error:e}))
+            .catch((e)=>console.log(e))
             
         }
     }else{
@@ -57,7 +59,6 @@ export const search=(lastKey,tag)=>{
                     })
                 }
                 arrayOfKeys= Object.keys(snapshot.val())
-                console.log(arrayOfKeys)
                 return posts
             }).then((response)=>dispatch({type:'SEARCH_POSTS_ADDED',payload:response,lastKey:arrayOfKeys[5]}))
             .catch((e)=>dispatch({type:'SEARCH_POSTS_ERROR',error:e}))
