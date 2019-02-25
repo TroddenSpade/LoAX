@@ -1,15 +1,24 @@
 import React from 'react';
-import { View , Text , Button , TextInput ,StyleSheet, KeyboardAvoidingView } from 'react-native';
+import {
+    View
+    ,Text
+    ,Button
+    ,CheckBox
+    ,TextInput
+    ,StyleSheet
+    ,KeyboardAvoidingView } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {signinUser} from '../../redux/action/login';
+import { setTokens } from '../../utils/misc';
 
 
 class Signin extends React.Component{
     state={
         email:'',
-        password:''
+        password:'',
+        autoSignIn:false,
     }
 
     changeUserHandler = (email)=>{
@@ -22,14 +31,18 @@ class Signin extends React.Component{
         this.setState({
             password,
         })
-
     }
 
-    doAction = ()=>{
-        this.props.signinUser(this.state);
+    doAction =()=>{
+        this.props.signinUser(this.state)
+        .then((response)=>{
+            if(this.state.autoSignIn){
+                setTokens(response.payload)
+            }
+            this.props.navigation.navigate('Views');
+        })
+        .catch(e=>alert(e))
     }
-
-
 
     render(){
         return(
@@ -51,6 +64,11 @@ class Signin extends React.Component{
                     />
                 </View>
 
+                <View style={styles.checkBox}>
+                    <CheckBox value={this.state.autoSignIn} onValueChange={()=>this.setState({autoSignIn:!this.state.autoSignIn})}/>
+                    <Text>auto sign-in</Text>
+                </View>
+
                 <Button
                     title="Sign In"
                     onPress={this.doAction}
@@ -69,10 +87,8 @@ class Signin extends React.Component{
 }
 
 const mapStateToProps =(state)=>{
-    // console.log("state")
-    // console.log(state)
     return{
-        login:state.login,
+        userData:state.login.userData
     }
 }
 
@@ -99,4 +115,9 @@ const styles = StyleSheet.create({
     block:{
         margin:10
     },
+    checkBox:{
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    }
 })
