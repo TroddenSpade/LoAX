@@ -11,26 +11,25 @@ import {
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Feather,AntDesign } from '@expo/vector-icons';
-import { Font } from 'expo';
 
 import Loading from '../../screens/loading';
 import { getPosts } from '../../../redux/action/getPosts';
+import { getMyPosts,getMyData } from '../../../redux/action/getMyProfile';
+
 import List from './postsList';
 
 class Home extends React.Component {
 
   state={
-    fontLoaded: false,
     loadposts:false,
     scrollY:0,
     refreshing:false,
   }
 
-  async componentWillMount(){
-    await Font.loadAsync({
-      'Pacifico-Regular': require('../../../../assets/fonts/Pacifico-Regular.ttf'),
-    });
-    this.setState({ fontLoaded: true });
+  componentWillMount(){
+    this.props.getPosts();
+    this.props.getMyData(this.props.userid);
+    this.props.getMyPosts(this.props.userid);
   }
 
   list = ()=>(
@@ -79,11 +78,11 @@ class Home extends React.Component {
           </TouchableOpacity>
 
         <View>
-          {this.state.fontLoaded ? (
-            <Text style={styles.logoText}>
-            l<Image style={styles.logo} source={require('../../../utils/LoAX.png')}/>AX
-            </Text> 
-            ) : null}
+          
+          <Text style={styles.logoText}>
+          L<Image style={styles.logo} source={require('../../../utils/LoAX.png')}/>AX
+          </Text> 
+            
         </View>
 
         <TouchableOpacity
@@ -117,16 +116,16 @@ class Home extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state)
   return {
-      list: state.posts.list,
-      isLoading: state.posts.loading,
-      lastKey:state.posts.lastKey,
+    list: state.posts.list,
+    isLoading: state.posts.loading,
+    lastKey:state.posts.lastKey,
+    userid:state.login.userData.userid,
   }
 }
 
 function mapDispatchToProps(dispatch){
-  return bindActionCreators({getPosts},dispatch);
+  return bindActionCreators({getPosts,getMyPosts,getMyData},dispatch);
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(Home);
@@ -138,8 +137,7 @@ const styles =StyleSheet.create({
   },
   logoText:{
     fontSize:30,
-    color: "green",
-    fontFamily: 'Pacifico-Regular'
+    color: "lightgreen",
   },
   topBar:{
     flexDirection:"row",
