@@ -5,94 +5,87 @@ import {
    ,Image
    ,StyleSheet
    ,Dimensions
-   ,TouchableOpacity} from 'react-native';
-import {Entypo,SimpleLineIcons,AntDesign,MaterialIcons} from '@expo/vector-icons';
+   ,TouchableWithoutFeedback
+} from 'react-native';
 
 const screenWidth = Dimensions.get("window").width;
-const height = Dimensions.get('window').height;
 
 export default Feed =(props)=>{
     return(
-    <View style={{borderBottomColor: 'lightgrey',borderBottomWidth:1,}}>
-        <View style={styles.topbar}>
-            <Text style={{color:"white"}}>PULL<AntDesign name="caretup" size={30} color='white'/>UP</Text>
-        </View>
-        <View style={styles.address}>
-            <Text>{props.posts.address}</Text>
-        </View>
-        <View style={{flexDirection:'column'}}> 
-            <Image 
-            style={styles.images}
-            source={{uri:props.posts.url}}/>
-        </View>
+        <View>
+            <View style={{height: 25}}/>
+            <View style={styles.container}>
+                <View style={styles.address}>
+                    <Text>{props.posts.address}</Text>
+                </View>
+                <View style={{justifyContent: "flex-end",alignItems: "flex-start"}}>
+                    <TouchableWithoutFeedback
+                    onLongPress={() => {props.locationHandler()}}
+                    delayLongPress={1500}>
+                        <Image 
+                        style={styles.images}
+                        source={{uri:props.posts.url}}/>
+                    </TouchableWithoutFeedback> 
 
-        <View style={styles.profile}>     
-            <TouchableOpacity style={styles.profile}>
-            <Image 
-                style={styles.avatar}
-                source={{uri:props.posts.avatar}}/>
-            <View style={{justifyContent: 'center'}}>
-                <Text style={{fontSize:20,}}>{props.posts.username}</Text>
-            </View>
-            </TouchableOpacity>
-
-            <View style={{flexDirection:'row',marginRight:10,}}>
-            <TouchableOpacity style={{justifyContent:'center',marginRight:15}}>
-                <AntDesign name="like2" size={30} color="green" /> 
-            </TouchableOpacity>
+                    <View style={styles.userBar}>
+                        <Image
+                        style={styles.avatar}
+                        source={{uri:props.posts.avatar}}/>
+                        <View style={{justifyContent: 'center'}}>
+                            <Text style={styles.username}>{props.posts.username}</Text>
+                        </View>
+                    </View> 
+                </View>
+                
+                <View style={styles.caption}>
+                    <Text style={{fontSize:20}}>{props.posts.disc}</Text>
+                </View>
             
-            <TouchableOpacity style={{justifyContent:'center',marginRight:10}}>
-                <Entypo name="dots-three-horizontal" size={30} color='green'/>
-            </TouchableOpacity>
             </View>
         </View>
-        
-        <View style={styles.caption}>
-            <Text style={{fontSize:20}}>{props.posts.disc}</Text>
-        </View>
-        
-    </View>
     )        
 }
-
-
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
-    },
-    images:{
-        width:screenWidth,
-        height: screenWidth-30,
-    },
-    avatar:{
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        borderWidth: 3,
-        borderColor: 'green',
-        margin: 10,
-    },
-    profile:{
-        flexDirection:"row",
-        height: 55,
-        justifyContent: "space-between",
-        alignItems: 'center'
-    },
-    locationBar:{
-        backgroundColor: "green", 
-        height: 40,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        margin:5,
+        borderWidth: 1,
+        borderColor:"lightgreen",
+        borderRadius:20,
     },
     address:{
         height:40,
+        padding:5,
     },
-    topbar:{
-        height: 25,
-        flex: 1,
-        backgroundColor: "lightgreen",
-        justifyContent: "center",
+    userBar:{
+        flex:1,
+        position: 'absolute',
+        flexDirection: "row",
+        backgroundColor: "white",
+        padding:5,
+        borderTopRightRadius: 20,
+    },
+    username:{
+        color:"grey",
+        fontSize: 20,
+        marginRight: 5,
+        marginLeft: 5
+    },
+    avatar:{
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: 'green',
+    },
+    images:{
+        width:screenWidth-10,
+        height:screenWidth-10,
+    },
+    catption:{
+
     }
 })
