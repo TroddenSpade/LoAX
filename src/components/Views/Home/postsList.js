@@ -7,40 +7,45 @@ import {
    ,Dimensions
    ,TouchableOpacity
 ,TouchableWithoutFeedback} from 'react-native';
-import {Entypo,SimpleLineIcons,AntDesign,MaterialIcons} from '@expo/vector-icons';
+import {Entypo,AntDesign} from '@expo/vector-icons';
 
 const screenWidth = Dimensions.get("window").width;
 
 export default List =(props)=>{
     return(
-    <View style={{borderBottomColor: 'lightgrey',borderBottomWidth:1,}}>
-        <View style={{flexDirection:'column'}}> 
+    <View style={styles.container}>
+        <View style={styles.address}>
+            <Text>{props.posts.address}</Text>
+        </View>
+        <View style={{justifyContent: "flex-end",alignItems: "flex-start"}}>
             <TouchableWithoutFeedback
             onLongPress={() => {props.locationHandler()}}
-            delayLongPress={1500}
-            >
+            delayLongPress={1500}>
                 <Image 
                 style={styles.images}
                 source={{uri:props.posts.url}}/>
-            </TouchableWithoutFeedback>  
+            </TouchableWithoutFeedback> 
 
-            <TouchableOpacity style={styles.locationBar} onPress={() => {props.locationHandler()}}>
+            <TouchableOpacity style={styles.userBar} onPress={()=>{props.profileHandler()}}>
+                <Image
+                style={styles.avatar}
+                source={{uri:props.posts.avatar}}/>
+                <View style={{justifyContent: 'center'}}>
+                    <Text style={styles.username}>{props.posts.username}</Text>
+                </View>
+            </TouchableOpacity> 
+        </View>
+
+
+        <TouchableOpacity style={styles.locationBar} onPress={() => {props.locationHandler()}}>
             <View style={{flexDirection:'row',alignContent:'center',justifyContent: 'center'}}>
                 <Entypo name="location-pin" size={24} color="white"/>
                 <Text style={{fontSize:20 ,color:"white"}}>LOCATION</Text>
             </View>
-            </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+        
 
-        <View style={styles.profile}>     
-            <TouchableOpacity style={styles.profile} onPress={() => {props.profileHandler()}}>
-            <Image 
-                style={styles.avatar}
-                source={{uri:props.posts.avatar}}/>
-            <View style={{justifyContent: 'center'}}>
-                <Text style={{fontSize:20,}}>{props.posts.username}</Text>
-            </View>
-            </TouchableOpacity>
+        <View style={styles.profile}>
 
             <View style={{flexDirection:'row',marginRight:10,}}>
             <TouchableOpacity style={{justifyContent:'center',marginRight:15}}>
@@ -61,36 +66,52 @@ export default List =(props)=>{
     )        
 }
 
-
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        margin:5,
+        borderWidth: 1,
+        borderColor:"lightgreen",
+        borderRadius:20,
     },
-    images:{
-        width:screenWidth,
-        height: screenWidth-30,
+    address:{
+        height:40,
+        padding:5,
+    },
+    userBar:{
+        flex:1,
+        position: 'absolute',
+        flexDirection: "row",
+        backgroundColor: "white",
+        padding:5,
+        borderTopRightRadius: 20,
+    },
+    username:{
+        color:"grey",
+        fontSize: 20,
+        marginRight: 5,
+        marginLeft: 5
     },
     avatar:{
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        borderWidth: 3,
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        borderWidth: 1,
         borderColor: 'green',
-        margin: 10,
     },
-    profile:{
-        flexDirection:"row",
-        height: 55,
-        justifyContent: "space-between",
-        alignItems: 'center'
+    images:{
+        width:screenWidth-10,
+        height:screenWidth-10,
     },
     locationBar:{
-        backgroundColor: "green", 
+        backgroundColor: "lightgreen",
         height: 40,
-        justifyContent: 'center'
+        width: screenWidth-10,
+        justifyContent: 'center',
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
     },
     catption:{
 
