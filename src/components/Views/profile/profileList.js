@@ -3,10 +3,10 @@ import {
     View, 
     Image,
     Text,
+    Button,
     TouchableOpacity,
     StyleSheet,
     Dimensions,
-    ScrollView,
     ImageBackground
 } from 'react-native';
 
@@ -16,11 +16,16 @@ export default ProfileList=(props)=>{
     return(
         <View style={styles.block}>
             <ImageBackground source={{uri:props.data.url}} style={{width: '100%', height:100}} blurRadius={1}>
-            <TouchableOpacity style={styles.inside}>
-            <View><Image style={styles.images} source={{uri :props.data.url}}/></View>
-            <View style={{alignItems: "center",justifyContent:'center',backgroundColor: "lightgreen"}}><Text>likes</Text></View>
-            <View style={{alignItems: "center",justifyContent:'center',backgroundColor: "lightgreen"}}><Text>location</Text></View>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.inside}
+                onPress={props.postHandler}>
+                    <View><Image style={styles.images} source={{uri :props.data.url}}/></View>
+                    
+                    <View style={styles.address}><Text style={styles.text}>{props.data.address}</Text></View>
+                    
+                    <View style={styles.button}>
+                        <Button title="Edit" color="lightgreen" onPress={()=>alert("edit")}/>
+                    </View>
+                </TouchableOpacity>
             </ImageBackground>
         </View>
     )
@@ -29,14 +34,17 @@ export default ProfileList=(props)=>{
 const styles=StyleSheet.create({
     block:{
         height:100,
-        borderColor: 'lightgrey',
-        borderBottomWidth:1, 
+        borderColor: 'lightgreen',
+        borderWidth:1,
+        margin:5,
     },
     inside:{
         marginLeft: 2,
         marginRight: 10,
         flexDirection:"row",
         justifyContent: "space-between",
+        alignItems: "center"
+        
     },
     images:{
         width:100,
@@ -63,7 +71,6 @@ const styles=StyleSheet.create({
         width: 100,
         borderRadius: 50,
         alignItems:'center',
-
     },
     username:{
         alignItems: 'center',
@@ -74,5 +81,22 @@ const styles=StyleSheet.create({
         flexDirection: "row",
         justifyContent:"flex-end",
     
+    },
+    address:{
+        padding: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        height:80,
+        width: 150,
+        borderRadius: 15,
+        backgroundColor: "lightgreen",
+        
+    },
+    text:{
+        color: "white",
+    },
+    button:{
+        flexDirection:"row",
+        height: 100,
     }
 })
