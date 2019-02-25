@@ -1,4 +1,4 @@
-export default search =(state={loading:false},action)=>{
+export default search =(state={loading:null},action)=>{
     switch(action.type){
         case 'SEARCH_START_LOADING':
             return Object.assign({},{loading:true});
