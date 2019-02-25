@@ -5,15 +5,19 @@ import {
     StyleSheet,
     TextInput,
     ScrollView,
+    Dimensions,
+    RefreshControl,
     TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign,MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Loading from '../../screens/loading';
 import List from './searchList';
 import { search } from '../../../redux/action/search';
+
+const screenWidth = Dimensions.get("window").width;
 
 class Search extends React.Component{
 
@@ -55,30 +59,50 @@ class Search extends React.Component{
     }
 
     onRefresh = () => {
-        const REFRESH = "";
+        const RELOAD = -1;
         this.setState({refreshing: true});
-        this.props.search(REFRESH,this.state.tag)
+        this.props.search(RELOAD,this.state.tag)
         .then(()=>{this.setState({refreshing:false,scrollY:0})});
     }
 
-    search =()=>{
-        this.setState({tag:this.state.input})
-        this.setState({loading:true});
-        this.props.search(null,this.state.tag)
-        .then(()=>this.setState({loading:false}));
-        console.log(this.state.loading)
+    search =async()=>{
+        const FIRST_LOAD = 0;
+        await this.setState({tag:this.state.input})
+        this.props.search(FIRST_LOAD,this.state.tag);
     }
 
+    searchScreen=()=>{
+        if(this.props.loading == true){
+            return <Loading/>
+        }else if(this.props.loading == false){
+            return(
+                <ScrollView
+                onScroll={this.handleScroll}
+                refreshControl={
+                    <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.onRefresh}
+                    colors={["#19649E", "#469976", "#72CE4E","#489C74"]}/>
+                }>
+                <View style={styles.blank}/>
+                    {this.list()}
+                </ScrollView>
+            )
+        }else{
+            return(
+                <View style={styles.searchScreen}>
+                    <MaterialCommunityIcons name="feature-search" color={"lightgreen"} size={100}/>
+                    <Text style={{fontSize:20,color:"lightgreen"}}>Search For Tags !</Text>
+                </View>
+            )
+        }
+    }
+    
     render(){
         return(
             <View style={styles.container}>
-                
-                {this.props.loading || this.state.loading==null ?
-                <View>
-                    <Text>search</Text>
-                </View>
-                :
-                <ScrollView>{this.list()}</ScrollView>}
+
+                {this.searchScreen()}
 
                 <View style={styles.searchBar}>
                     <View>
@@ -134,8 +158,18 @@ const styles = StyleSheet.create({
     },
     input:{
         paddingLeft:5,
+        width:screenWidth*8/10,
     },
     search:{
         paddingRight:5,
+    },
+    searchScreen:{
+        flex:1,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+    },
+    blank:{
+        height:75,
     }
 });
