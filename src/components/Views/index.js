@@ -3,11 +3,8 @@ import {
   createBottomTabNavigator,
   createAppContainer,
   createStackNavigator,
-  createSwitchNavigator
 } from 'react-navigation';
 import { Entypo,AntDesign } from '@expo/vector-icons';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 
 import Home from './Home/home';
 import ProfileTab from './profile/profileTab';
@@ -16,14 +13,9 @@ import LocationTab from './locationTab';
 import Parallax from '../screens/parallax';
 import Profile from '../screens/profile';
 import AddPost from './AddPost/index';
-import Login from '../login';
 import Search from './search/search';
 
-import { getPosts } from '../../redux/action/getPosts';
-import { getMyData,getMyPosts } from '../../redux/action/getMyProfile';
-
-
-TabNavigation = createAppContainer(createBottomTabNavigator({
+const TabNavigation = createAppContainer(createBottomTabNavigator({
   location: {
     screen:LocationTab,
     navigationOptions: () => ({
@@ -71,17 +63,16 @@ TabNavigation = createAppContainer(createBottomTabNavigator({
     style:{
       borderTopWidth: 3,
       borderTopColor: "lightgreen",
-      height:60, 
+      height:40,
     }
   }
 
 }));
 
 
-
-const RootStack = createStackNavigator(
+export const Views = createStackNavigator(
   {
-    Main:{
+    TabNavigation:{
       screen:TabNavigation,
     },
     Parallax:{
@@ -98,44 +89,7 @@ const RootStack = createStackNavigator(
     }
   },
   {
-    initialRouteName: 'Main',
+    initialRouteName: 'TabNavigation',
     headerMode:'none'
   }
 );
-
-const RootNavigation = createSwitchNavigator({
-  RootStack:{
-    screen:RootStack,
-  },
-  Login:{
-    screen:Login,
-  }
-},{
-  initialRouteName: 'RootStack',
-});
-
-const AppContainer = createAppContainer(RootNavigation);
-
-class Navigation extends React.Component {
-  componentWillMount(){
-    this.props.getPosts();
-    this.props.getMyData(this.props.userid);
-    this.props.getMyPosts(this.props.userid);
-  }
-
-  render() {
-    return <AppContainer />;
-  }
-}
-
-function mapStateToProps(state) {
-  return {
-    userid:state.login.userData.userid,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({getPosts,getMyPosts,getMyData},dispatch)
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Navigation);
