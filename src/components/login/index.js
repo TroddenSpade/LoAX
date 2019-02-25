@@ -1,10 +1,10 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation'; // Version can be specified in package.json
+import { createStackNavigator } from 'react-navigation'; // Version can be specified in package.json
 
 import Signin from './signin';
 import Signup from './signup';
 
-const RootStack = createStackNavigator(
+export const Login = createStackNavigator(
   {
     signIn:{
       screen:Signin,
@@ -29,11 +29,3 @@ const RootStack = createStackNavigator(
     initialRouteName: 'signIn',
   }
 );
-
-const AppContainer = createAppContainer(RootStack);
-
-export default class Login extends React.Component {
-  render() {
-    return <AppContainer />;
-  }
-}
