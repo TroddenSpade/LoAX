@@ -19,13 +19,11 @@ export default Feed =(props)=>{
                     <Text>{props.posts.address}</Text>
                 </View>
                 <View style={{justifyContent: "flex-end",alignItems: "flex-start"}}>
-                    <TouchableWithoutFeedback
-                    onLongPress={() => {props.locationHandler()}}
-                    delayLongPress={1500}>
+                    <View>
                         <Image 
                         style={styles.images}
                         source={{uri:props.posts.url}}/>
-                    </TouchableWithoutFeedback> 
+                    </View> 
 
                     <View style={styles.userBar}>
                         <Image
