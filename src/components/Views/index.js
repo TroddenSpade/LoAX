@@ -10,7 +10,7 @@ import Home from './Home/home';
 import ProfileTab from './profile/profileTab';
 import LocationTab from './locationTab';
 
-import Parallax from '../screens/parallax';
+import Parallax from '../Views/Parallax/parallax';
 import Profile from '../screens/profile';
 import AddPost from './AddPost/index';
 import Search from './search/search';
