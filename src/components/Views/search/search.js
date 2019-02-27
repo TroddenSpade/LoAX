@@ -30,6 +30,17 @@ class Search extends React.Component{
         refreshing:false,
     }
 
+    data = this.props.posts;
+
+    async componentWillMount(){
+        const { navigation } = this.props;
+        const tag = navigation.getParam('tag');
+        if(tag!=undefined){
+            await this.setState({input:tag})
+            this.search();
+        }
+    }
+
     changePassHandler=(input)=>{
         this.setState({input});
     }
@@ -39,7 +50,8 @@ class Search extends React.Component{
         <List  
           key={id} posts={item}
           locationHandler={() => this.props.navigation.navigate('Parallax',{data:item})}
-          profileHandler={()=>this.props.navigation.navigate('Profile',{data:item.userid})}/>
+          profileHandler={()=>this.props.navigation.navigate('Profile',{data:item.userid})}
+          tagHandler={(tag)=>this.props.navigation.navigate('Search',{tag:tag})}/>
         ))
       )
 
@@ -67,7 +79,7 @@ class Search extends React.Component{
 
     search =async()=>{
         const FIRST_LOAD = 0;
-        await this.setState({tag:this.state.input})
+        this.setState({tag:this.state.input})
         this.props.search(FIRST_LOAD,this.state.tag);
     }
 
@@ -110,6 +122,7 @@ class Search extends React.Component{
                         maxLength={30}
                         style={styles.input}
                         placeholder="Search"
+                        value={this.state.input}
                         onChangeText={this.changePassHandler}/>
                     </View>
 
