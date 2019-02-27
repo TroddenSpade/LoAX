@@ -37,7 +37,8 @@ class Home extends React.Component {
     <List  
       key={id} posts={item}
       locationHandler={() => this.props.navigation.navigate('Parallax',{data:item})}
-      profileHandler={()=>this.props.navigation.navigate('Profile',{data:item.userid})}/>
+      profileHandler={()=>this.props.navigation.navigate('Profile',{data:item.userid})}
+      tagHandler={(tag)=>this.props.navigation.navigate('Search',{tag:tag})}/>
     ))
   )
 
