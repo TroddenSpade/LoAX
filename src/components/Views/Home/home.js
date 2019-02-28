@@ -43,7 +43,7 @@ class Home extends React.Component {
   )
 
   handleScroll=(event)=>{
-    if(event.nativeEvent.contentOffset.y > this.state.scrollY
+    if(event.nativeEvent.contentOffset.y >= this.state.scrollY
        && !this.state.loadposts
        && this.props.lastKey!=undefined){
       this.setState({loadposts:true});

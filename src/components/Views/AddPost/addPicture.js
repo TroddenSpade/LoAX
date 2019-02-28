@@ -31,7 +31,7 @@ export default class AddPicture extends React.Component{
         if(response.cancelled == false){
             this.setState({
                 cancelled:response.cancelled,
-                image:response.uri,TouchableOpacity
+                image:response.uri,
             })
             this.props.imageHandler(response.uri);
         }

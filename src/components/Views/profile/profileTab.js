@@ -9,6 +9,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
+import { MaterialCommunityIcons,Octicons } from '@expo/vector-icons';
 
 import { removeToken,getTokens } from '../../../utils/misc';
 import ProfileList from './profileList';
@@ -39,13 +40,13 @@ class Profile extends React.Component {
           <View style={styles.topButton}>
             <TouchableOpacity
             onPress={()=>removeToken(()=>this.props.navigation.navigate('Login'))}>
-              <Text>Sign Out</Text>
+              <Octicons name="sign-out" color={"lightgreen"} size={30}/>
             </TouchableOpacity>
             <View/>
             <View/>
             <TouchableOpacity
-            onPress={()=>alert("setting")}>
-              <Text>Settings</Text>
+            onPress={()=>this.props.navigation.navigate('Settings')}>
+              <MaterialCommunityIcons name="settings" color={"lightgreen"} size={30}/>
             </TouchableOpacity>
           </View>
 
@@ -55,7 +56,7 @@ class Profile extends React.Component {
               </View>
               
               <View style={styles.username}>
-              <Text style={{fontSize:20,color:'green'}}>{this.props.myData.username}</Text>
+              <Text style={{fontSize:20,color:'grey'}}>{this.props.myData.username}</Text>
               </View>
           </View>
 

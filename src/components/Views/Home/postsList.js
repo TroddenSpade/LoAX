@@ -33,10 +33,10 @@ export default class List extends React.Component{
             if(item.length>1 && item[0]=='#')
                 return(
                 <TouchableOpacity key={id} onPress={()=>this.props.tagHandler(item.substring(1))}>
-                <Text style={{color:'grey',fontWeight:'bold',fontsize:15}}>{item} </Text>
+                <Text style={{color:'grey',fontWeight:'bold',fontSize:15}}>{item} </Text>
                 </TouchableOpacity>
                 )
-            else    return(<Text style={{color:'grey',fontsize:15}}>{item} </Text>)
+            else    return(<Text style={{color:'grey',fontSize:15}}>{item} </Text>)
         })
     }
 

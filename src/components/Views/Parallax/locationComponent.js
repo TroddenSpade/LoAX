@@ -31,6 +31,8 @@ const styles = StyleSheet.create({
     height: 25,
     width: '100%',
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: "lightgreen",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
