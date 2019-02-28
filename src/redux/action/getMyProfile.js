@@ -21,3 +21,24 @@ export const getMyData =(userid)=>{
         payload:request
     }
 }
+
+export const updateData =(newdata,avatarUrl,myData,token)=>{
+    const URL = `${FireBaseUser}/${myData.userid}.json?auth=${token}`;
+    const request = axios({
+        method: 'PUT',
+        url: URL,
+        data:{
+            pic:avatarUrl,
+            name:newdata.name,
+            bio:newdata.bio,
+            email:myData.email,
+            userid:myData.userid,
+            username:myData.username
+        }
+    }).then((response)=>response.data)
+    .catch((e)=>console.log(e.data));
+    return{
+        type:'MY_DATA_SUCCESSFUL',
+        payload:request,
+    }
+}
