@@ -14,6 +14,7 @@ import Parallax from '../Views/Parallax/parallax';
 import Profile from '../screens/profile';
 import AddPost from './AddPost/index';
 import Search from './search/search';
+import Settings from './Settings/settings';
 
 const TabNavigation = createAppContainer(createBottomTabNavigator({
   location: {
@@ -86,6 +87,9 @@ export const Views = createStackNavigator(
     },
     Search:{
       screen:Search
+    },
+    Settings:{
+      screen:Settings
     }
   },
   {
