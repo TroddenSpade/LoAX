@@ -20,7 +20,9 @@ export default class Parallax extends React.Component{
             renderForeground={() => (
                 <LocationComponent location={data.region}/>
             )}>
-                <Feed posts={data}/>
+                <Feed posts={data}
+                profileHandler={()=>this.props.navigation.navigate('Profile',{data:data.userid})}
+                tagHandler={(tag)=>this.props.navigation.navigate('Search',{tag:tag})}/>
             </ParallaxScrollView>
         )
     }
