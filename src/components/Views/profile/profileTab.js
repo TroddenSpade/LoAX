@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { MaterialCommunityIcons,Octicons } from '@expo/vector-icons';
+import DropdownAlert from 'react-native-dropdownalert';
 
 import { removeToken,getTokens } from '../../../utils/misc';
 import ProfileList from './profileList';
@@ -34,6 +35,7 @@ class Profile extends React.Component {
     return (
       
       <View style={styles.container}>
+        <DropdownAlert defaultContainer={{paddingTop: 20,padding: 5}} ref={ref => this.dropdown = ref} />
 
         <View style={styles.topbar}>
 
@@ -45,7 +47,11 @@ class Profile extends React.Component {
             <View/>
             <View/>
             <TouchableOpacity
-            onPress={()=>this.props.navigation.navigate('Settings')}>
+            onPress={()=>this.props.navigation.navigate('Settings',
+            {
+              successHandler:()=>this.dropdown.alertWithType('success', 'successfully updated', 'All changes have been done ;) '),
+              errorHandler:(e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `)
+            })}>
               <MaterialCommunityIcons name="settings" color={"lightgreen"} size={30}/>
             </TouchableOpacity>
           </View>
