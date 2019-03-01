@@ -94,11 +94,15 @@ class AddPost extends React.Component{
   }
 
   post = async(uri) => {
+    const { navigation } = this.props;
+    const successHandler = navigation.getParam('successHandler');
+    const errorHandler = navigation.getParam('errorHandler');
+
     const uploadUrl = await this.uploadImageAsync(uri);
     const postId = 9999999999999 - (new Date()).getTime();
     const address = await axios(`${OpenCage}?q=${this.state.location.latitude}+${this.state.location.longitude}&key=${OpenCageAPI}`)
     .then(response=>response.data.results[0].formatted);
-    await axios({
+    axios({
       method: 'PUT',
       url: `${FireBase}/post/${postId}.json?auth=${this.props.token}`,
       data: {
@@ -109,10 +113,10 @@ class AddPost extends React.Component{
         address,
         tags:this.stringToTag(this.state.disc)
       },
-    }).then(()=>{alert("done!")})
-      .catch((e)=>{alert("error!")});
+    }).then(successHandler)
+      .catch((e)=>errorHandler(e));
 
-    this.props.navigation.navigate('Home');
+    this.props.navigation.goBack();
   }
 
   render(){
