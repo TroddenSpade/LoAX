@@ -73,12 +73,18 @@ class Settings extends React.Component{
     }
 
     update= async ()=>{
+        const { navigation } = this.props;
+        const successHandler = navigation.getParam('successHandler');
+        const errorHandler = navigation.getParam('errorHandler');
+
         if(this.state.image == null){
             var avatarUrl = this.state.lastAvatar;
         }else{
             var avatarUrl = await this.uploadImageAsync(this.state.image);
         }
-        this.props.updateData(this.state,avatarUrl,this.props.myData,this.props.token);
+        this.props.updateData(this.state,avatarUrl,this.props.myData,this.props.token)
+        .then(successHandler)
+        .catch((e)=>errorHandler(e))
         this.props.navigation.goBack();
     }
 
@@ -86,7 +92,7 @@ class Settings extends React.Component{
         return(
             <View style={styles.container}>
                 <View style={{height:25}}/>
-                
+
                 <View style={styles.update}>
                     <Button title='update profile' color='lightgreen' onPress={this.update}/>
                 </View>
