@@ -4,6 +4,7 @@ import {
    Text,
    StyleSheet,
    Image,
+   Button,
    ScrollView,
    RefreshControl,
    TouchableOpacity
@@ -12,10 +13,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Feather,AntDesign } from '@expo/vector-icons';
 import DropdownAlert from 'react-native-dropdownalert';
+import Modal from "react-native-modal";
 
 import Loading from '../../screens/loading';
 import { getPosts } from '../../../redux/action/getPosts';
 import { getMyPosts,getMyData } from '../../../redux/action/getMyProfile';
+import { report } from '../../../utils/misc';
 
 import List from './postsList';
 
@@ -25,6 +28,9 @@ class Home extends React.Component {
     loadposts:false,
     scrollY:0,
     refreshing:false,
+    modalVisible:false,
+    modalId:null,
+    isReport:false,
   }
 
   componentWillMount(){
@@ -39,7 +45,8 @@ class Home extends React.Component {
       key={id} posts={item}
       locationHandler={() => this.props.navigation.navigate('Parallax',{data:item})}
       profileHandler={()=>this.props.navigation.navigate('Profile',{data:item.userid})}
-      tagHandler={(tag)=>this.props.navigation.navigate('Search',{tag:tag})}/>
+      tagHandler={(tag)=>this.props.navigation.navigate('Search',{tag:tag})}
+      modalHandler={()=>this.setState({modalVisible:true,modalId:item.id})}/>
     ))
   )
 
@@ -69,9 +76,68 @@ class Home extends React.Component {
     return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <DropdownAlert defaultContainer={{paddingTop: 20,padding: 5}} ref={ref => this.dropdown = ref} />
+      
+      <Modal
+      isVisible={this.state.modalVisible}
+      transparent={true}
+      onBackButtonPress={()=>this.setState({modalVisible:false,isReport:false})}
+      onBackdropPress={()=>this.setState({modalVisible:false,isReport:false})}>
+        {this.state.isReport ? 
+        <View style={styles.modalContent}>
+        <TouchableOpacity
+        style={styles.reports}
+        onPress={()=>this.setState({isReport:false})}>
+          <Text>GoBack</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+        style={styles.reports}
+        onPress={()=>{
+          report(this.state.modalId,'WRONG_LOCATION',this.props.token,
+          ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
+          (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
+          this.setState({isReport:false,modalVisible:false})}
+          }><Text>Wrong Location</Text></TouchableOpacity>
+        <TouchableOpacity
+        style={styles.reports}
+        onPress={()=>{
+          report(this.state.modalId,'UNRELATED_PICTURE',this.props.token,
+          ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
+          (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
+          this.setState({isReport:false,modalVisible:false})}
+        }><Text>Unrelated Picture</Text></TouchableOpacity>
+        <TouchableOpacity
+        style={styles.reports}
+        onPress={()=>{
+          report(this.state.modalId,'ADVERTISMENT',this.props.token,
+          ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
+          (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
+          this.setState({isReport:false,modalVisible:false})}
+        }><Text>Advertisment</Text></TouchableOpacity>
+        <TouchableOpacity
+        style={styles.reports}
+        onPress={()=>{
+          report(this.state.modalId,'VIOLENCE',this.props.token,
+          ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
+          (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
+          this.setState({isReport:false,modalVisible:false})}
+        }><Text>Violence</Text></TouchableOpacity>
+        <TouchableOpacity
+        style={styles.reports}
+        onPress={()=>{
+          report(this.state.modalId,'NUDITY_PORNOGRAPHY',this.props.token,
+          ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
+          (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
+          this.setState({isReport:false,modalVisible:false})}
+        }><Text>Nudity & Pornography</Text></TouchableOpacity>
+        </View>
+        :
+        <View style={styles.modalContent}>
+          <Text>Modal</Text>
+          <TouchableOpacity onPress={()=>this.setState({isReport:true})}><Text>Report</Text></TouchableOpacity>
+        </View>}
+      </Modal>
 
       <View style={styles.topBar}>
-
         <TouchableOpacity
           onPress={()=>this.props.navigation.navigate('AddPost',
           {
@@ -128,6 +194,7 @@ function mapStateToProps(state) {
     isLoading: state.posts.loading,
     lastKey:state.posts.lastKey,
     userid:state.login.userData.userid,
+    token:state.login.userData.token,
   }
 }
 
@@ -154,5 +221,18 @@ const styles =StyleSheet.create({
     borderBottomWidth:2,
     borderBottomColor:'lightgreen',
     marginTop: 20,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  reports:{
+    height:40,
+    borderColor: 'lightgreen',
+    borderWidth: 2,
   }
 })
