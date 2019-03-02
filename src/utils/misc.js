@@ -1,4 +1,7 @@
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage } from 'react-native';
+import axios from 'axios';
+
+import { FireBase } from './links';
 
 export const setTokens =(data)=>{
     const now = new Date();
@@ -27,4 +30,16 @@ export const removeToken =(CBfunction)=>{
         '@LoAX@expireToken',
         '@LoAX@userid'
     ]).then(()=>CBfunction());
+}
+
+export const report =(id,type,token,successHandler,errorHandler)=>{
+    axios({
+        method: 'PUT',
+        url: `${FireBase}/report/${id}.json?auth=${token}`,
+        data: {
+          id:id,
+          type
+        },
+      }).then(successHandler)
+        .catch((e)=>errorHandler(e));
 }
