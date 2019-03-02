@@ -50,7 +50,7 @@ export default class List extends React.Component{
         return(
         <View style={styles.container}>
             <View style={styles.address}>
-                <Text style={{color:"grey"}}>{this.props.posts.address}</Text>
+                <Text style={{color:"black"}}>{this.props.posts.address}</Text>
             </View>
             <View style={{justifyContent:'flex-end',alignItems: 'flex-start'}}>
                 <TouchableWithoutFeedback
