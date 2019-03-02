@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Loading from './loading';
-import ProfileList from '../Views/profile/profileList';
+import ProfileList from './profileList';
 import { getProfile } from '../../redux/action/getProfile';
 
 const screenWidth = Dimensions.get("window").width;
