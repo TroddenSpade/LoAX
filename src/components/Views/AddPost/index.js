@@ -88,7 +88,6 @@ class AddPost extends React.Component{
       .ref()
       .child('images/' + uuid.v4());
     const snapshot = await ref.put(blob);
-    // We're done with the blob, close and release it
     blob.close();
     return await snapshot.ref.getDownloadURL();
   }
@@ -109,6 +108,7 @@ class AddPost extends React.Component{
       method: 'PUT',
       url: `${FireBase}/post/${postId}.json?auth=${this.props.token}`,
       data: {
+        id:postId,
         url:uploadUrl,
         disc:this.state.disc,
         region : this.state.location,
