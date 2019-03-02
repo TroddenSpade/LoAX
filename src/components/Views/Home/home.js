@@ -11,6 +11,7 @@ import {
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Feather,AntDesign } from '@expo/vector-icons';
+import DropdownAlert from 'react-native-dropdownalert';
 
 import Loading from '../../screens/loading';
 import { getPosts } from '../../../redux/action/getPosts';
@@ -67,11 +68,16 @@ class Home extends React.Component {
   render() {
     return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      
+      <DropdownAlert defaultContainer={{paddingTop: 20,padding: 5}} ref={ref => this.dropdown = ref} />
+
       <View style={styles.topBar}>
 
         <TouchableOpacity
-          onPress={()=>this.props.navigation.navigate('AddPost')}>
+          onPress={()=>this.props.navigation.navigate('AddPost',
+          {
+          successHandler:()=>this.dropdown.alertWithType('success', 'successfully updated', 'All changes have been done ;) '),
+          errorHandler:(e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `)
+          })}>
             <Feather
               name="camera"
               color={"grey"}
