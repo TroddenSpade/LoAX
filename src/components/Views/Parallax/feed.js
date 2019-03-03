@@ -59,7 +59,7 @@ export default class Feed extends React.Component{
                                 <Text style={styles.username}>{this.props.posts.username}</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.settings}>
+                        <TouchableOpacity style={styles.settings} onPress={this.props.modalHandler}>
                             <Entypo name="dots-three-horizontal" size={30} color='grey'/>
                         </TouchableOpacity>
                     </View>
