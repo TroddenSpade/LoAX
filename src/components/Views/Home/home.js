@@ -85,14 +85,14 @@ class Home extends React.Component {
         {this.state.isReport ? 
         <View style={styles.modalContent}>
         <TouchableOpacity
-        style={styles.reports}
+        style={styles.goback}
         onPress={()=>this.setState({isReport:false})}>
-          <Text>GoBack</Text>
+          <Text style={{fontSize:15,color:'lightgreen'}}><AntDesign name="back" size={15} color='lightgreen'/>GoBack</Text>
         </TouchableOpacity>
         <TouchableOpacity
         style={styles.reports}
         onPress={()=>{
-          report(this.state.modalId,'WRONG_LOCATION',this.props.token,
+          report(this.state.modalId,'WRONG_LOCATION',this.props.data,
           ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
           (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
           this.setState({isReport:false,modalVisible:false})}
@@ -100,7 +100,7 @@ class Home extends React.Component {
         <TouchableOpacity
         style={styles.reports}
         onPress={()=>{
-          report(this.state.modalId,'UNRELATED_PICTURE',this.props.token,
+          report(this.state.modalId,'UNRELATED_PICTURE',this.props.data,
           ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
           (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
           this.setState({isReport:false,modalVisible:false})}
@@ -108,7 +108,7 @@ class Home extends React.Component {
         <TouchableOpacity
         style={styles.reports}
         onPress={()=>{
-          report(this.state.modalId,'ADVERTISMENT',this.props.token,
+          report(this.state.modalId,'ADVERTISMENT',this.props.data,
           ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
           (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
           this.setState({isReport:false,modalVisible:false})}
@@ -116,7 +116,7 @@ class Home extends React.Component {
         <TouchableOpacity
         style={styles.reports}
         onPress={()=>{
-          report(this.state.modalId,'VIOLENCE',this.props.token,
+          report(this.state.modalId,'VIOLENCE',this.props.data,
           ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
           (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
           this.setState({isReport:false,modalVisible:false})}
@@ -124,7 +124,7 @@ class Home extends React.Component {
         <TouchableOpacity
         style={styles.reports}
         onPress={()=>{
-          report(this.state.modalId,'NUDITY_PORNOGRAPHY',this.props.token,
+          report(this.state.modalId,'NUDITY_PORNOGRAPHY',this.props.data,
           ()=>this.dropdown.alertWithType('success', 'successfully done!', 'We\'ll get to that! ;)'),
           (e)=>this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${e} `));
           this.setState({isReport:false,modalVisible:false})}
@@ -132,8 +132,12 @@ class Home extends React.Component {
         </View>
         :
         <View style={styles.modalContent}>
-          <Text>Modal</Text>
-          <TouchableOpacity onPress={()=>this.setState({isReport:true})}><Text>Report</Text></TouchableOpacity>
+          <TouchableOpacity onPress={()=>alert("it's not available right now !")} style={styles.reports}>
+            <Text>Share</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>this.setState({isReport:true})} style={styles.reports}>
+            <Text>Report</Text>
+          </TouchableOpacity>
         </View>}
       </Modal>
 
@@ -178,7 +182,7 @@ class Home extends React.Component {
         <RefreshControl
         refreshing={this.state.refreshing}
         onRefresh={this.onRefresh}
-        colors={["#19649E", "#469976", "#72CE4E","#489C74"]}/>
+        colors={["#469976", "#72CE4E","#489C74"]}/>
       }>
         {this.list()}
       </ScrollView>}
@@ -194,7 +198,7 @@ function mapStateToProps(state) {
     isLoading: state.posts.loading,
     lastKey:state.posts.lastKey,
     userid:state.login.userData.userid,
-    token:state.login.userData.token,
+    data:state.login.userData,
   }
 }
 
@@ -231,8 +235,22 @@ const styles =StyleSheet.create({
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   reports:{
-    height:40,
+    height:50,
+    width: '100%',
+    margin: 5,
     borderColor: 'lightgreen',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderWidth: 2,
+  },
+  goback:{
+    height:30,
+    width: '50%',
+    margin: 5,
+    borderColor: 'lightgreen',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderRadius: 10,
   }
 })
