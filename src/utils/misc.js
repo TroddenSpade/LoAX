@@ -32,12 +32,13 @@ export const removeToken =(CBfunction)=>{
     ]).then(()=>CBfunction());
 }
 
-export const report =(id,type,token,successHandler,errorHandler)=>{
+export const report =(id,type,data,successHandler,errorHandler)=>{
     axios({
-        method: 'PUT',
-        url: `${FireBase}/report/${id}.json?auth=${token}`,
+        method: 'POST',
+        url: `${FireBase}/report.json?auth=${data.token}`,
         data: {
           id:id,
+          userid:data.userid,
           type
         },
       }).then(successHandler)
