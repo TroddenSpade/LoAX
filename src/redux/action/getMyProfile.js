@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as firebase from 'firebase';
 
-import { FireBaseUser } from '../../utils/links';
+import { FireBaseUser, FireBasePost } from '../../utils/links';
 
 export const getMyPosts =(userid)=>{
     const request = firebase.database().ref(`post`).orderByChild('userid').equalTo(userid)
@@ -41,4 +41,13 @@ export const updateData =(newdata,avatarUrl,myData,token)=>{
         type:'MY_DATA_SUCCESSFUL',
         payload:request,
     }
+}
+
+export const deletePost=(postId,token,cb,cbError)=>{
+    const URL = `${FireBasePost}/${postId}.json?auth=${token}`
+    const request = axios({
+        method:'DELETE',
+        url:URL,
+    }).then(cb)
+    .catch(e=>cbError(e))
 }
