@@ -23,7 +23,7 @@ export default ProfileList=(props)=>{
                     <View style={styles.address}><Text style={styles.text}>{props.data.address}</Text></View>
                     
                     <View style={styles.button}>
-                        <Button title="Edit" color="lightgreen" onPress={()=>alert("edit")}/>
+                        <Button title="Edit" color="lightgreen" onPress={props.modalHandler}/>
                     </View>
                 </TouchableOpacity>
             </ImageBackground>
