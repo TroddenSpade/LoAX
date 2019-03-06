@@ -13,6 +13,7 @@ import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import uuid from 'uuid';
+import Geohash from 'latlon-geohash';
 
 import Home from '../Home/home';
 import AddLocation from './addLocation';
@@ -114,7 +115,9 @@ class AddPost extends React.Component{
         region : this.state.location,
         userid:this.props.userid,
         address,
-        tags:this.stringToTag(this.state.disc)
+        tags:this.stringToTag(this.state.disc),
+        like:{likeCount:0,likers:{"":true}},
+        geoHash:Geohash.encode(this.state.location.latitude,this.state.location.longitude,9),
       },
     }).then(successHandler)
       .catch((e)=>errorHandler(e));
