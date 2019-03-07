@@ -45,9 +45,7 @@ export default class AddLocSmall extends React.Component{
                 style={{ flex: 1 }}
                 region={this.props.location}>
                     <MapView.Marker
-                    title="Click Me"
                     coordinate={this.props.location}
-                    onCalloutPress={this.submitLocation}
                     />
                 </MapView>
             )
