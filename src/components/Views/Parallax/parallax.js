@@ -32,7 +32,7 @@ class Parallax extends React.Component{
                 <LocationComponent location={data.region}/>
             )}>
                 <View style={styles.container}>
-                    <Feed posts={data}
+                    <Feed posts={data} user={this.props.data}
                     profileHandler={()=>this.props.navigation.navigate('Profile',{data:data.userid})}
                     tagHandler={(tag)=>this.props.navigation.navigate('Search',{tag:tag})}
                     modalHandler={()=>this.setState({modalVisible:true,modalId:data.id})}/>

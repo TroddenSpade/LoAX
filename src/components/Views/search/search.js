@@ -54,7 +54,7 @@ class Search extends React.Component{
     list = ()=>(
         this.props.posts.map((item,id)=>(
         <List  
-          key={id} posts={item}
+          key={id} posts={item} user={this.props.data}
           locationHandler={() => this.props.navigation.navigate('Parallax',{data:item})}
           profileHandler={()=>this.props.navigation.navigate('Profile',{data:item.userid})}
           tagHandler={(tag)=>this.props.navigation.navigate('Search',{tag:tag})}

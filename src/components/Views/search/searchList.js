@@ -9,17 +9,37 @@ import {
 ,TouchableWithoutFeedback} from 'react-native';
 import {Entypo,AntDesign} from '@expo/vector-icons';
 
+import { like,dislike } from '../../../redux/action/like';
+
 const screenWidth = Dimensions.get("window").width;
 
 export default class List extends React.Component{
-    state={
-        loadmore:false,
-        like:false,
+    constructor(props) {
+        super(props);
+        const userid = props.user.userid;
+        if(props.posts.like.likers[userid]==true){
+            this.state = {
+                ...props,
+                loadmore:false,
+                like:true,
+                likeCount:props.posts.like.likeCount
+            };
+        }else{
+            this.state = {
+                ...props,
+                loadmore:false,
+                like:false,
+                likeCount:props.posts.like.likeCount
+            };
+        }    
     }
-    
-    likeHandler= async()=>{
-        this.setState({like: !this.state.like});
-        this.color = await this.state.like ? 'lightgreen' : 'grey';
+
+    likeHandler=()=>{
+        like(this.props.posts,this.props.user,()=>this.setState({like:true,likeCount:this.state.likeCount+1}))
+    }
+
+    dislikeHandler=()=>{
+        dislike(this.props.posts,this.props.user,()=>this.setState({like:false,likeCount:this.state.likeCount-1}))
     }
 
     loadmoreHandler=()=>{
@@ -84,14 +104,14 @@ export default class List extends React.Component{
     
             
             {this.state.like ? 
-            <TouchableOpacity style={styles.likeBar} onPress={this.likeHandler}>
+            <TouchableOpacity style={styles.likeBar} onPress={this.dislikeHandler}>
                 <AntDesign name="like1" size={25} color="lightgreen"/> 
-                <Text style={{color:"lightgreen",fontSize:15}}>{1002}</Text>
+                <Text style={{color:"lightgreen",fontSize:15}}>{this.state.likeCount}</Text>
             </TouchableOpacity>
             :
             <TouchableOpacity style={styles.likeBar} onPress={this.likeHandler}>
                 <AntDesign name="like2" size={25} color="grey"/> 
-                <Text style={{color:"grey",fontSize:15}}>{1002}</Text>
+                <Text style={{color:"grey",fontSize:15}}>{this.state.likeCount}</Text>
             </TouchableOpacity>}
     
     
