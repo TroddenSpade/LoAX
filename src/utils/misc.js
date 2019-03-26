@@ -1,46 +1,42 @@
 import { AsyncStorage } from 'react-native';
 import axios from 'axios';
 
-import { FireBase } from './links';
+import { REPORT } from './links';
 
 export const setTokens =(data)=>{
-    const now = new Date();
-    const expire = now.getTime() + 60*60*1000;
     AsyncStorage.multiSet([
-        ['@LoAX@token',data.idToken],
-        ['@LoAX@refereshToken',data.refreshToken],
-        ['@LoAX@expireToken',expire.toString()],
-        ['@LoAX@userid',data.localId]
+        ['@LoAX@token',data.token],
+        ['@LoAX@id',data._id]
     ]).then(()=>console.log("Token Has Been Set"));
 }
 
-export const getTokens=(func)=>{
+export const getTokens=(scb,fcb)=>{
     AsyncStorage.multiGet([
         '@LoAX@token',
-        '@LoAX@refereshToken',
-        '@LoAX@expireToken',
-        '@LoAX@userid'
-    ]).then(response => func(response));
+        '@LoAX@id'
+    ]).then(response => scb(response))
+    .catch(err=>fcb(err));
 }
 
 export const removeToken =(CBfunction)=>{
     AsyncStorage.multiRemove([
         '@LoAX@token',
-        '@LoAX@refereshToken',
-        '@LoAX@expireToken',
-        '@LoAX@userid'
+        '@LoAX@id'
     ]).then(()=>CBfunction());
 }
 
-export const report =(id,type,data,successHandler,errorHandler)=>{
-    axios({
-        method: 'POST',
-        url: `${FireBase}/report.json?auth=${data.token}`,
-        data: {
-          id:id,
-          userid:data.userid,
-          type
-        },
-      }).then(successHandler)
-        .catch((e)=>errorHandler(e));
+export const report =(postid,type,userid,successHandler,errorHandler)=>{
+    axios.post(REPORT,{
+        post_id:postid,
+        user_id:userid,
+        type
+    })
+    .then(res=>{
+        if(res.data.report){
+            successHandler();
+        }else{
+            errorHandler(res.data.error);
+        }
+    })
+    .catch((e)=>errorHandler(e));
 }
