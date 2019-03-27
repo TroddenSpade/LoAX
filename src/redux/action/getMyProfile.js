@@ -1,53 +1,55 @@
 import axios from 'axios';
-import * as firebase from 'firebase';
 
-import { FireBaseUser, FireBasePost } from '../../utils/links';
+import { GET_MY_POSTS,UPDATE_USER,DELETE_POST } from '../../utils/links';
 
-export const getMyPosts =(userid)=>{
-    const request = firebase.database().ref(`post`).orderByChild('userid').equalTo(userid)
-    .once(`value`).then((snapshot)=>Object.values(snapshot.val()));
-    return{
-        type:"MY_POSTS_SUCCESSFUL",
-        payload:request
+export const getMyPosts =(userid,skip=0,key,cb)=>{
+    return (dispatch,getState)=>{
+        if(key==0)  dispatch({type:'START_LOADING_MY_POSTS'});
+        axios.get(`${GET_MY_POSTS}?userid=${userid}&skip=${skip}&limit=5&order=desc`)
+        .then(response=>{
+            if(key == -1){ //REFRESH
+                dispatch({type:'MY_POSTS_SUCCESS',payload:response.data,skip:skip+5});
+            }else{
+                dispatch({type:'MY_POSTS_REFRESH',payload:response.data,skip:skip+5});                
+            }
+            cb();
+        })
+        .catch(err=>dispatch({type:"MY_POSTS_ERROR",payload:err}))
     }
 }
 
-export const getMyData =(userid)=>{
-    const URL = `${FireBaseUser}/${userid}.json`;
-    const request = axios(URL).then(response => response.data);
+export const updateData =(data,userid,scb,fcb)=>{
+    
+    return (dispatch,getState)=>{
+        axios.post(`${UPDATE_USER}?id=${userid}`,data)
+        .then((res)=>{
+            if(res.data.update){
+                scb();
+                dispatch({type:'USER_UPDATED',payload:res.data.user});
+            }else{
+                fcb(res.data.err);
+            }
+            return res;
+        })
+        .catch((e)=>{
+            dispatch({type:'USER_UPDATE_ERROR'});
+            fcb(e);
+        });
 
-    return{
-        type:"MY_DATA_SUCCESSFUL",
-        payload:request
     }
 }
 
-export const updateData =(newdata,avatarUrl,myData,token)=>{
-    const URL = `${FireBaseUser}/${myData.userid}.json?auth=${token}`;
-    const request = axios({
-        method: 'PUT',
-        url: URL,
-        data:{
-            pic:avatarUrl,
-            name:newdata.name,
-            bio:newdata.bio,
-            email:myData.email,
-            userid:myData.userid,
-            username:myData.username
-        }
-    }).then((response)=>response.data)
-    .catch((e)=>console.log(e.data));
-    return{
-        type:'MY_DATA_SUCCESSFUL',
-        payload:request,
+export const deletePost=(postId,postKey,scb,fcb)=>{
+    return (dispatch,getState)=>{
+        axios.delete(`${DELETE_POST}?id=${postId}`)
+        .then(res=>{
+            if(res.data.delete){
+                scb();
+                dispatch({type:'POST_DELETED',key:postKey})
+            }else{
+                fcb('error');
+            }
+        })
+        .catch(e=>fcb(e));
     }
-}
-
-export const deletePost=(postId,token,cb,cbError)=>{
-    const URL = `${FireBasePost}/${postId}.json?auth=${token}`
-    const request = axios({
-        method:'DELETE',
-        url:URL,
-    }).then(cb)
-    .catch(e=>cbError(e))
 }

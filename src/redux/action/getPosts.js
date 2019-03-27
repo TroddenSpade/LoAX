@@ -1,66 +1,24 @@
-import * as firebase from 'firebase';
+import axios from 'axios';
+import { GET_POSTS } from '../../utils/links';
 
-export const getPosts=(lastKey)=>{
-    if(lastKey == null || lastKey == ""){
-        return async (dispatch , getState)=>{
-            let posts=[];
-            let arrayOfKeys =[];
-            if(lastKey == null) dispatch({type:'START_LOADING'});
-            firebase.database().ref(`post`)
-            .orderByKey()
-            .limitToFirst(5)
-            .once(`value`)
-            .then(async (snapshot) => {
-                for(let key in snapshot.val()){
-                    await firebase.database().ref(`user/${snapshot.val()[key].userid}`)
-                    .once(`value`)
-                    .then(async (snapshot2)=>{
-                        posts.push({
-                            ...snapshot.val()[key],
-                            "username":snapshot2.val().username,
-                            "avatar":snapshot2.val().pic,
-                        })
-                        return snapshot2
-                    })
-                }
-                arrayOfKeys= Object.keys(snapshot.val())
-                return posts
-            }).then((response)=>dispatch({type:'POSTS_SUCCESS',payload:response,lastKey:arrayOfKeys[4]}))
-            .catch((e)=>dispatch({type:'POSTS_ERROR',error:e}))
-            
-        }
-    }else{
-        return async (dispatch , getState)=>{
-            let posts=[];
-            let arrayOfKeys =[];
-            firebase.database().ref(`post`)
-            .orderByKey()
-            .startAt(lastKey)
-            .limitToFirst(6)
-            .once(`value`)
-            .then(async (snapshot) => {
-                let count = 0;
-                for(let key in snapshot.val()){
-                    count ++;
-                    if (count == 1) continue;
-                    await firebase.database().ref(`user/${snapshot.val()[key].userid}`)
-                    .once(`value`)
-                    .then(async (snapshot2)=>{
-                        posts.push({
-                            ...snapshot.val()[key],
-                            "username":snapshot2.val().username,
-                            "avatar":snapshot2.val().pic,
-                        })
-                        return snapshot2
-                    })
-                }
-                arrayOfKeys= Object.keys(snapshot.val())
-                console.log(arrayOfKeys)
-                return posts
-            }).then((response)=>dispatch({type:'POSTS_ADDED',payload:response,lastKey:arrayOfKeys[5]}))
-            .catch((e)=>dispatch({type:'POSTS_ERROR',error:e}))
-            
-        }
+export const getPosts=(skip=0,key,cb)=>{
+    return (dispatch,getState)=>{
+        if(key==0)  dispatch({type:'START_LOADING_POSTS'});
+        axios.get(`${GET_POSTS}?skip=${skip}&limit=5&order=desc`)
+        .then(response=>{
+            if(key == 1){ //REFRESH
+                dispatch({type:'REFRESH_POSTS',payload:response.data,skip:skip+5})
+            }else{
+                dispatch({type:'POSTS_SUCCESS',payload:response.data,skip:skip+5})
+            }
+            cb();
+        })
+        .catch(err=>dispatch({type:"POSTS_ERROR",payload:err}))
     }
-    
+}
+
+export const post=(data,scb,fcb)=>{
+    axios.post(URL,data)
+    .then(scb)
+    .catch((e)=>fcb(e.response.data.error));
 }
