@@ -1,17 +1,23 @@
-export default posts=(state={loading:true},action)=>{
+export default posts=(state={loading:true,list:[]},action)=>{
     switch(action.type){
-        case 'START_LOADING':
-            return Object.assign({},state,{loading:true})
+        case 'START_LOADING_POSTS':
+            return {loading:true}
 
         case 'POSTS_SUCCESS':
-            return Object.assign({}, state, { list:action.payload , loading: false,lastKey:action.lastKey })
+            let list = state.list.concat(action.payload);
+            const skip = action.skip > list.length ? undefined : action.skip;
+            return Object.assign({}, state, { list:list, loading: false, skip:skip })
 
-        case 'POSTS_ADDED':
-            let arr= state.list.concat(action.payload);
-            return Object.assign({},state,{list:arr,lastKey:action.lastKey});
+        case 'REFRESH_POSTS':
+            return Object.assign({}, state, { list:action.payload, loading: false, skip:action.skip })
 
         case 'POSTS_ERROR':
-            return Object.assign({},state,{loading:true})
+            return Object.assign({},state,{loading:false ,error:action.payload});
+
+        case 'POST_ADDED':
+            var arr = state.list.slice();
+            arr.unshift(action.payload);
+            return Object.assign({}, state, { list:arr });
 
         default:
             return state;

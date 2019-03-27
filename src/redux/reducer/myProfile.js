@@ -1,23 +1,25 @@
-export default myProfile =(state={postsLoading:true,profileLoading:true},action)=>{
+export default myProfile =(state={loading:true,list:[]},action)=>{
     switch(action.type){
-        case 'MY_POSTS_SUCCESSFUL':
-            return{
-                ...state,
-                myPosts:action.payload,
-                postsLoading:false
-            }
+        case 'START_LOADING_MY_POSTS':
+            return{loading:true}
 
-        case 'MY_DATA_SUCCESSFUL':
-            return{
-                ...state,
-                myData:action.payload,
-                profileLoading:false
-            }
+        case 'MY_POSTS_SUCCESS':
+            let list = state.list.concat(action.payload);
+            const skip = action.skip > list.length ? undefined : action.skip;
+            return Object.assign({}, state, { list:list, loading: false, skip:skip })
 
-        case 'PROFILE_SUCCESSFUL':
-            return{
+        case'MY_POSTS_REFRESH':
+            return Object.assign({}, state, { list:action.payload, loading: false, skip:action.skip });
+
+        case 'MY_POSTS_ERROR':
+            return Object.assign({},state,{loading:false ,error:action.payload});
+
+        case 'POST_DELETED':
+            var arr = state.list.slice();
+            arr.splice(action.key, 1);
+            return {
                 ...state,
-                profile:action.payload,
+                list:arr
             }
 
         default:
