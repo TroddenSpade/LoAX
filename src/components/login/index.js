@@ -1,31 +1,29 @@
-import React from 'react';
-import { createStackNavigator } from 'react-navigation'; // Version can be specified in package.json
+import React from "react";
+import { createStackNavigator } from "react-navigation";
 
-import Signin from './signin';
-import Signup from './signup';
+import Signin from "./signin";
+import Signup from "./signup";
 
 export const Login = createStackNavigator(
   {
-    signIn:{
-      screen:Signin,
-      navigationOptions:{
-        // title: 'Sign In',
-        headerStyle: {
-          backgroundColor: "transparent",
-        },
-      },
+    signIn: {
+      screen: Signin,
+      navigationOptions: {
+        title: "Sign In"
+      }
     },
-    signUp:{
+    signUp: {
       screen: Signup,
-      navigationOptions:{
-        title: 'SIGN UP',
-        headerStyle: {
-          // backgroundColor: "transparent",
-        },
-      },
-    },
+      navigationOptions: {
+        title: "SIGN UP"
+      }
+    }
   },
   {
-    initialRouteName: 'signIn',
+    initialRouteName: "signIn",
+    headerMode: "none",
+    navigationOptions: {
+      headerVisible: false
+    }
   }
 );
