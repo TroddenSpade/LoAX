@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { LinearGradient,Constants } from 'expo';
+import { LinearGradient, Constants } from "expo";
 
 import Loading from "./loading";
 import ProfileList from "./profileList";
@@ -23,7 +23,7 @@ class Profile extends React.Component {
   state = {
     loadposts: false,
     scrollY: 0,
-    refreshing: false,
+    refreshing: false
   };
 
   componentWillMount() {
@@ -116,37 +116,9 @@ class Profile extends React.Component {
           }
         >
           <View style={{ justifyContent: "center", alignItems: "center" }}>
-            {this.props.user.bio.length == 0 ? (
-              <TouchableOpacity
-                style={styles.bio}
-                onPress={() =>
-                  this.props.navigation.navigate("Settings", {
-                    successHandler: () =>
-                      this.dropdown.alertWithType(
-                        "success",
-                        "successfully updated",
-                        "All changes have been done ;) "
-                      ),
-                    errorHandler: e =>
-                      this.dropdown.alertWithType(
-                        "error",
-                        "Error",
-                        `error has been occurred :( \n${e} `
-                      )
-                  })
-                }
-              >
-                <Text style={{ fontSize: 20, color: "lightgrey" }}>
-                  Add Bio
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.bio}>
-                <Text style={{ textAlign: "center" }}>
-                  {this.props.user.bio}
-                </Text>
-              </View>
-            )}
+            <View style={styles.bio}>
+              <Text style={{ textAlign: "center" }}>{this.props.user.bio}</Text>
+            </View>
 
             <LinearGradient
               style={styles.status}
@@ -176,7 +148,7 @@ class Profile extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state)
+  console.log(state);
   return {
     user: state.profile.user,
     posts: state.profile.list,
