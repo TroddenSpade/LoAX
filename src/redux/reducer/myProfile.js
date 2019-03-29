@@ -22,6 +22,11 @@ export default myProfile =(state={loading:true,list:[]},action)=>{
                 list:arr
             }
 
+        case 'POST_ADDED':
+            var arr = state.list.slice();
+            arr.unshift(action.payload);
+            return Object.assign({}, state, { list:arr });
+
         default:
             return state
     }

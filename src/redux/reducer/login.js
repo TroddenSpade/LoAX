@@ -22,6 +22,24 @@ export default login = (state={},action)=>{
                 user:action.payload
             }
 
+        case 'POST_DELETED':
+            return{
+                valid: true,
+                user:{
+                    ...state.user,
+                    noPosts:state.user.noPosts -1,
+                }
+            }
+        
+        case 'POST_ADDED':
+            return{
+                valid: true,
+                user:{
+                    ...state.user,
+                    noPosts:state.user.noPosts +1,
+                }
+            }
+
         default :
             return state;
     }
