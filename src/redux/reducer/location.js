@@ -1,9 +1,9 @@
 export default location =(state={loading:true},action)=>{
     switch(action.type){
-        case 'LOADING_START':
-            return Object.assign({},state,{loading:true});
+        // case 'LOADING_START':
+        //     return Object.assign({},state,{loading:true});
 
-        case 'LOCATION_POSTS_SUCCESS':
+        case 'LOCATION_SUCCESS':
             return Object.assign({},state,{loading:false,posts:action.payload});
             
         default:
