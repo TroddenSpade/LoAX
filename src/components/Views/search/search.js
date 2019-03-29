@@ -90,7 +90,7 @@ class Search extends React.Component {
       this.props.skip != undefined
     ) {
       this.setState({ loadposts: true });
-      this.props.search(this.state.tag, this.props.skip, 1, () => {
+      this.props.search(this.state.tag, this.props.skip, -1, () => {
         this.setState({
           loadposts: false,
           scrollY: this.state.scrollY + 2000
@@ -100,9 +100,9 @@ class Search extends React.Component {
   };
 
   onRefresh = () => {
-    const RELOAD = 0;
+    const RELOAD = 1;
     this.setState({ refreshing: true });
-    this.props.search(this.state.tag, 0, RELOAD, () => {
+    this.props.search(this.state.tag, 1, RELOAD, () => {
       this.setState({ refreshing: false, scrollY: 0 });
     });
   };
