@@ -47,7 +47,7 @@ expo start
 
 ## Contributing
 
-Please read [CONTRIBUTING](CONTRIBUTING).
+Please read [CONTRIBUTING](CONTRIBUTING.md).
 
 ## License
 
