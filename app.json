@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "LoAX",
-    "slug": "LoAX",
+    "slug": "loax",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
@@ -27,7 +27,8 @@
     },
     "android": {
       "package": "com.loax"
-    }
+    },
+    "description": ""
   },
   "android": {
     "package": "com.loax",
@@ -37,11 +38,4 @@
       }
     }
   }
-  
 }
-
-
-
-
-
-  
