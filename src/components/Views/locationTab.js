@@ -1,17 +1,24 @@
 import React from "react";
-import { View, Text,TouchableOpacity,StyleSheet,Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Button
+} from "react-native";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import DropdownAlert from 'react-native-dropdownalert';
-import { MapView,Permissions,Location,IntentLauncherAndroid } from 'expo';
-import Geohash from 'latlon-geohash';
-import { Entypo } from '@expo/vector-icons';
+import DropdownAlert from "react-native-dropdownalert";
+import { MapView, Permissions, Location, IntentLauncherAndroid } from "expo";
+import Geohash from "latlon-geohash";
+import { Entypo } from "@expo/vector-icons";
 
-import { location } from '../../redux/action/location';
+import { location } from "../../redux/action/location";
+import Loading from "../screens/loading";
 
 class LocationTab extends React.Component {
   state = {
-    image: null,
     location: {
       latitude: 37.78825,
       longitude: -122.4324,
@@ -19,155 +26,187 @@ class LocationTab extends React.Component {
       longitudeDelta: 0.0149
     },
     disc: "",
-    loading: false,
-    myLocation: null,
-    mylocStatus: false
+    mylocStatus: false,
+    mylocLoading: true
   };
 
-  componentWillMount(){
+  componentWillMount() {
     this.getLocationPermission();
-    const hash = Geohash.encode(this.state.location.latitude,this.state.location.longitude,9);
+    const hash = Geohash.encode(
+      this.state.location.latitude,
+      this.state.location.longitude,
+      9
+    );
     this.props.location(hash);
+    setTimeout(() => {
+      this.setState({ mylocLoading: false });
+      if (!this.state.mylocStatus)
+        this.dropdown.alertWithType("error", "Error", "Timeout !");
+    }, 10000);
   }
 
   getLocationPermission = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    console.log(status)
+
     if (status !== "granted") {
-      this.setState({
-        permission: "Permission To Access Location Was Denied"
-      });
+      this.dropdown.alertWithType(
+        "error",
+        "Error",
+        "Permission To Access Location Was Denied"
+      );
+      this.setState({ mylocLoading: false });
     }
+
     let providerStatus = await Location.getProviderStatusAsync();
-    this.setState({ providerStatus });
+
     if (
-      !this.state.providerStatus.gpsAvailable ||
-      !this.state.providerStatus.locationServicesEnabled
+      !providerStatus.gpsAvailable ||
+      !providerStatus.locationServicesEnabled
     ) {
       await IntentLauncherAndroid.startActivityAsync(
         IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
       );
     }
-    providerStatus = await Location.getProviderStatusAsync();
-    this.setState({ providerStatus });
 
-    if (
-      this.state.providerStatus.gpsAvailable &&
-      this.state.providerStatus.locationServicesEnabled
-    ) {
-      if (this.state.providerStatus.networkAvailable) {
-        let location = await Location.getCurrentPositionAsync().then(
-          response => response.coords
-        );
-        this.setState({
-          loading: false,
-          myLocation: {
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.0202,
-            longitudeDelta: 0.0149
-          },
-          mylocStatus: true,
-          location: {
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.0202,
-            longitudeDelta: 0.0149
-          }
-        });
-      } else {
-        this.dropdown.alertWithType('error', 'Error', `error has been occurred :( \n${this.state.providerStatus.networkAvailable} `)
-        this.setState({
-          loading: false
-        });
-      }
+    if (!providerStatus.gpsAvailable) {
+      this.setState({ mylocLoading: false });
+      this.dropdown.alertWithType("error", "Error", "GPS Not Available");
+    } else if (!providerStatus.locationServicesEnabled) {
+      this.setState({ mylocLoading: false });
+      this.dropdown.alertWithType("error", "Error", "locationServicesEnabled");
+    } else if (!providerStatus.networkAvailable) {
+      this.setState({ mylocLoading: false });
+      this.dropdown.alertWithType("error", "Error", "Network Not Available");
+    } else if (!providerStatus.passiveAvailable) {
+      this.setState({ mylocLoading: false });
+      this.dropdown.alertWithType("error", "Error", "Passive Not Available");
+    } else {
+      let location = await Location.getCurrentPositionAsync().then(
+        response => response.coords
+      );
+      this.setState({
+        mylocLoading: false,
+        mylocStatus: true,
+        location: {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.0202,
+          longitudeDelta: 0.0149
+        }
+      });
     }
-    this.setState({ loading: false });
   };
-  
-  handleLocationChange=(location)=>{
-    // this.loFinder(location);
-  }
 
-  list =(data)=>{
-    return data.map((item,id) => {
-      return(
-      <MapView.Marker
-      key={id}
-      coordinate={item.region}
-      title={item.username}
-      description={item.address}
-      onCalloutPress={()=>this.props.navigation.navigate('Parallax',{data:item})}
-      >
-        <View style={styles.marker}>
-          <View style={{top:'11%'}}>
-            <Entypo name="location-pin" size={60} color="red"/>
+  handleLocationChange = location => {
+    // this.loFinder(location);
+  };
+
+  list = data => {
+    return data.map((item, id) => {
+      return (
+        <MapView.Marker
+          key={id}
+          coordinate={item.region}
+          tooltip={false}
+          title={item.username}
+          description={item.address}
+          onCalloutPress={() =>
+            this.props.navigation.navigate("Parallax", { data: item })
+          }
+        >
+          <View style={styles.marker}>
+            <View style={{ top: "11%" }}>
+              <Entypo name="location-pin" size={60} color="#469577" />
+            </View>
+            <View style={styles.imageView}>
+              <Image style={styles.images} source={{ uri: item.image_url }} />
+            </View>
           </View>
-          <View style={styles.imageView}>
-            <Image
-            style={styles.images}
-            source={{uri:item.url}}/>
-          </View>
-        </View>
-      </MapView.Marker>
-    )})
-  }
+          <MapView.Callout style={{width: '200%'}}>
+            <Text style={{fontSize:10}}>{item.address}</Text>
+          </MapView.Callout>
+        </MapView.Marker>
+      );
+    });
+  };
 
   render() {
     return (
-      <View style={{ flex: 1,width:'100%',paddingTop:25}}>
-        <DropdownAlert defaultContainer={{paddingTop: 20,padding: 5}} ref={ref => this.dropdown = ref} />
-        <MapView
-          style={{ flex: 1 }}
-          initialRegion={this.state.location}
-          onRegionChange={this.handleLocationChange}>
-          {this.props.loading ?
-            null
-          :
-          this.list(this.props.posts)
-          }
-        </MapView>
+      <View style={{ flex: 1, width: "100%" }}>
+        <DropdownAlert
+          defaultContainer={{ paddingTop: 20, padding: 5 }}
+          ref={ref => (this.dropdown = ref)}
+        />
+        {this.state.mylocLoading ? (
+          <Loading />
+        ) : (
+          <MapView
+            style={{ flex: 1 }}
+            initialRegion={this.state.location}
+            onRegionChange={this.handleLocationChange}
+          >
+            {this.state.mylocStatus ? (
+              <MapView.Marker coordinate={this.state.location}>
+                <View style={styles.mylocation} />
+              </MapView.Marker>
+            ) : null}
+            {this.props.loading ? null : this.list(this.props.posts)}
+          </MapView>
+        )}
       </View>
     );
   }
 }
 
-mapStateToProps=(state)=>{
-  console.log(state);
+mapStateToProps = state => {
   return {
-    loading:state.location.loading,
-    posts:state.location.posts,
+    loading: state.location.loading,
+    posts: state.location.posts
   };
-}
+};
 
-mapDispatchToProps=(dispatch)=>{
-  return bindActionCreators({location},dispatch);
-}
+mapDispatchToProps = dispatch => {
+  return bindActionCreators({ location }, dispatch);
+};
 
-export default connect(mapStateToProps,mapDispatchToProps)(LocationTab);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LocationTab);
 
 const styles = StyleSheet.create({
-  info:{
-    flexDirection: 'row',
-    flex:1,
+  info: {
+    flexDirection: "row",
+    flex: 1,
     height: 40,
-    width:140,
-    position:'relative'
+    width: 140,
+    position: "relative"
   },
-  marker:{
-    alignItems: 'center',
-  },
-  callout:{
+  marker: {
     flex:1,
+    alignItems: "center"
   },
-  images:{
-    height:50,
-    width:50,
+  callout: {
+    flex: 1
   },
-  imageView:{
-    position:'absolute',
+  images: {
+    height: 50,
+    width: 50
+  },
+  imageView: {
+    flexDirection: "row",
+    position: "absolute",
     borderWidth: 2,
-    borderColor: 'red',
-    borderRadius: 5,
+    borderColor: "#469577",
+    borderRadius: 5
+  },
+  mylocation: {
+    height: 20,
+    width: 20,
+    borderWidth: 3,
+    borderColor: "white",
+    borderRadius: 10,
+    overflow: "hidden",
+    backgroundColor: "#007AFF"
   }
 });

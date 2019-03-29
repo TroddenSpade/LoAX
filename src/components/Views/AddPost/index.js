@@ -1,5 +1,5 @@
-import React from 'react';
-import { 
+import React from "react";
+import {
   View,
   Text,
   Button,
@@ -7,215 +7,293 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  KeyboardAvoidingView } from 'react-native';
-import { createStackNavigator,createAppContainer } from 'react-navigation';
-import * as firebase from 'firebase';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import uuid from 'uuid';
-import Geohash from 'latlon-geohash';
+  KeyboardAvoidingView
+} from "react-native";
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import { LinearGradient, Constants, Font } from "expo";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import axios from "axios";
+import Geohash from "latlon-geohash";
 
-import Home from '../Home/home';
-import AddLocation from './addLocation';
-import AddLocSmall from './addLocSmall';
-import AddPicture from './addPicture';
+import Home from "../Home/home";
+import AddLocation from "./addLocation";
+import AddLocSmall from "./addLocSmall";
+import AddPicture from "./addPicture";
+import { post } from "../../../redux/action/post";
 
-import { OpenCage , FireBase ,OpenCageAPI } from '../../../utils/links';
+import { OpenCage, OpenCageAPI } from "../../../utils/links";
 
-var width = Dimensions.get('window').width;
-var height = Dimensions.get('window').height - 65;
+var width = Dimensions.get("window").width;
+var height = Dimensions.get("window").height - 65;
 
-class AddPost extends React.Component{
-  state={
-    image:null,
-    location:{
+class AddPost extends React.Component {
+  state = {
+    image: null,
+    location: {
       latitude: 37.78825,
       longitude: -122.4324,
       latitudeDelta: 0.0202,
-      longitudeDelta: 0.0149,
+      longitudeDelta: 0.0149
     },
-    disc:'',
-    loading:false,
+    caption: "",
+    loading: false,
+    fontLoaded: false
+  };
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      Lobster: require("../../../../assets/fonts/Lobster-Regular.ttf")
+    });
+    this.setState({ fontLoaded: true });
   }
 
-  locationHandler=(location)=>{
+  locationHandler = location => {
     this.setState({
-      location:{
+      location: {
         latitude: location.latitude,
         longitude: location.longitude,
         latitudeDelta: location.latitudeDelta,
-        longitudeDelta: location.longitudeDelta,
+        longitudeDelta: location.longitudeDelta
       }
     });
-  }
+  };
 
-  imageHandler=(image)=>{
-    this.setState({image})
-  }
+  imageHandler = image => {
+    this.setState({ image });
+  };
 
-  stringToTag=(string)=>{
-    let tags = {};
-    const length = string.length;
-    for(let i=0 ; i<length;i++){
-      if(string[i]=='#'){
-        let tag='';
-        i++;
-        while(i<length && string[i]!=' '){
-          tag +=string[i];
-          i++;
-        }
-        Object.assign(tags,{[tag]:true});
+  stringToTag = string => {
+    let tags = [];
+    let words = string.split(" ");
+    const length = words.length;
+    for (let i = 0; i < length; i++) {
+      if (words[i].length < 2) continue;
+      if (words[i][0] == "#") {
+        tags.push(
+          words[i]
+            .substring(1)
+            .trim()
+            .toLowerCase()
+        );
       }
     }
     return tags;
-  }
+  };
 
-  async uploadImageAsync(uri) {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function(e) {
-        console.log(e);
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', uri, true);
-      xhr.send(null);
-    });
-    const ref = firebase
-      .storage()
-      .ref()
-      .child('images/' + uuid.v4());
-    const snapshot = await ref.put(blob);
-    blob.close();
-    return await snapshot.ref.getDownloadURL();
-  }
-
-  post = async(uri) => {
+  post = async () => {
     const { navigation } = this.props;
-    const successHandler = navigation.getParam('successHandler');
-    const errorHandler = navigation.getParam('errorHandler');
+    const successHandler = navigation.getParam("successHandler");
+    const errorHandler = navigation.getParam("errorHandler");
 
-    const uploadUrl = await this.uploadImageAsync(uri)
-    .then(response=>response)
-    .catch((e)=>errorHandler(e.response.data.error));
-    const postId = 9999999999999 - (new Date()).getTime();
-    const address = await axios(`${OpenCage}?q=${this.state.location.latitude}+${this.state.location.longitude}&key=${OpenCageAPI}`)
-    .then(response=>response.data.results[0].formatted)
-    .catch((e)=>errorHandler(e.response.data.error));
-    axios({
-      method: 'PUT',
-      url: `${FireBase}/post/${postId}.json?auth=${this.props.token}`,
-      data: {
-        id:postId,
-        url:uploadUrl,
-        disc:this.state.disc,
-        region : this.state.location,
-        userid:this.props.userid,
-        address,
-        tags:this.stringToTag(this.state.disc),
-        like:{likeCount:0,likers:{[this.props.userid]:false}},
-        geoHash:Geohash.encode(this.state.location.latitude,this.state.location.longitude,9),
-      },
-    }).then(successHandler)
-      .catch((e)=>errorHandler(e.response.data.error));
-
-    this.props.navigation.goBack(null);
-  }
-
-  render(){
-    console.log(this.state)
-    return(
-      <View style={styles.container}>
-        <View style={styles.button}>
-          <Button
-          onPress={()=>this.post(this.state.image)}
-          title="Post"
-          color="lightgreen"/>
-        </View> 
-        
-        <AddPicture height={height*2/5} imageHandler={this.imageHandler}/>
-        
-        <KeyboardAvoidingView styles={{width:'100%'}} behavior="padding" enabled>
-        <TextInput
-        multiline={true}
-        maxLength={150}
-        placeholder="Write A Caption"
-        style={styles.caption}
-        onChangeText={(disc) => this.setState({disc})}/>
-        </KeyboardAvoidingView>
-        
-
-        <TouchableOpacity style={styles.map} 
-        onPress={()=>this.props.navigation.navigate('AddLocation',
-        {locationHandler:(location)=>this.locationHandler(location)
-        ,location:this.state.location})}>
-          <AddLocSmall location={this.state.location}/>
-        </TouchableOpacity>
-      </View>
+    const address = await axios(
+      `${OpenCage}?q=${this.state.location.latitude}+${
+        this.state.location.longitude
+      }&key=${OpenCageAPI}`
     )
+      .then(response => response.data.results[0].formatted)
+      .catch(e => errorHandler(e.response.data.error));
+
+    const formData = new FormData();
+    formData.append("address", address);
+    formData.append(
+      "geoHash",
+      Geohash.encode(
+        this.state.location.latitude,
+        this.state.location.longitude,
+        9
+      )
+    );
+    formData.append("caption", this.state.caption);
+    formData.append("region.latitude", this.state.location.latitude);
+    formData.append("region.longitude", this.state.location.longitude);
+    formData.append("region.latitudeDelta", this.state.location.latitudeDelta);
+    formData.append(
+      "region.longitudeDelta",
+      this.state.location.longitudeDelta
+    );
+    formData.append("image", {
+      uri: this.state.image,
+      name: "image",
+      type: "image/jpg"
+    });
+    formData.append("user_data", this.props.userid);
+    var arr = this.stringToTag(this.state.caption);
+    for (var i = 0; i < arr.length; i++) {
+      formData.append("tags", arr[i]);
+    }
+
+    this.props.post(formData, successHandler, errorHandler);
+    this.props.navigation.goBack(null);
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <LinearGradient
+          style={styles.postButton}
+          colors={["#79CB52", "#225377"]}
+          start={[1, 0]}
+          end={[0, 0]}
+        >
+          <TouchableOpacity style={styles.button} onPress={this.post}>
+            {this.state.fontLoaded ? (
+              <Text
+                style={{
+                  fontFamily: "Lobster",
+                  fontSize: 25,
+                  color: "white"
+                }}
+              >
+                Add Post
+              </Text>
+            ) : null}
+          </TouchableOpacity>
+        </LinearGradient>
+
+        <View style={styles.borderpic}>
+          <AddPicture
+            height={(height * 2) / 5}
+            imageHandler={this.imageHandler}
+          />
+        </View>
+
+        <KeyboardAvoidingView
+          styles={{ width: "100%" }}
+          behavior="position"
+          enabled
+        >
+          <LinearGradient
+            style={styles.borderCaption}
+            colors={["#79CB52", "#225377"]}
+            start={[1, 0]}
+            end={[0, 0]}
+          >
+            <TextInput
+              multiline={true}
+              maxLength={150}
+              placeholder="Write A Caption"
+              style={styles.caption}
+              onChangeText={caption => this.setState({ caption })}
+            />
+          </LinearGradient>
+        </KeyboardAvoidingView>
+
+        <LinearGradient
+          style={styles.borderMap}
+          colors={["#79CB52", "#225377"]}
+          start={[1, 0]}
+          end={[0, 0]}
+        >
+          <TouchableOpacity
+            style={styles.map}
+            onPress={() =>
+              this.props.navigation.navigate("AddLocation", {
+                locationHandler: location => this.locationHandler(location),
+                location: this.state.location
+              })
+            }
+          >
+            <AddLocSmall location={this.state.location} />
+          </TouchableOpacity>
+        </LinearGradient>
+      </View>
+    );
   }
 }
 
-const mapStateToProps =(store)=>{
-  console.log(store)
-  return{
-    userid:store.login.userData.userid,
-    token:store.login.userData.token,
-  }
-}
+const mapStateToProps = store => {
+  return {
+    userid: store.login.user._id
+  };
+};
 
-const AddPostConnect =connect(mapStateToProps,null)(AddPost);
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ post }, dispatch);
+};
 
-export default RootStack = createStackNavigator(
+const AddPostConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddPost);
+
+export default (RootStack = createStackNavigator(
   {
-    AddPost:{
-      screen:AddPostConnect,
+    AddPost: {
+      screen: AddPostConnect
     },
-    AddLocation:{
-      screen: AddLocation,
+    AddLocation: {
+      screen: AddLocation
     },
-    AddPicture:{
-      screen : AddPicture,
+    AddPicture: {
+      screen: AddPicture
     },
-    Home:{
-      screen:Home,
+    Home: {
+      screen: Home
     }
   },
   {
-    initialRouteName: 'AddPost',
-    headerMode:'none'
+    initialRouteName: "AddPost",
+    headerMode: "none"
   }
-);
-
+));
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    justifyContent: "space-between",
+  container: {
+    flex: 1,
+    justifyContent: "space-around",
     alignItems: "center",
+    marginTop: Constants.statusBarHeight + 10
   },
-  button:{
-    marginTop:25,
-    width: width,
+  button: {
+    flex: 1,
+    backgroundColor: "transparent",
+    margin: 3,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  postButton: {
+    borderRadius: 10,
+    width: (width * 8) / 10,
     height: 40,
+    shadowOffset: { width: 10, height: 10 },
+    shadowColor: "black",
+    shadowOpacity: 1.0,
+    shadowRadius: 1,
+    elevation: 10
   },
-  picture:{
-    height:height*2/5,
-    width:width,
+  picture: {
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 10
   },
-  map:{
-    height:height*2/5,
-    width:width
+  map: {
+    flex: 1,
+    margin: 2
   },
-  caption:{
-    height: height/5,
-    width:width,
+  caption: {
+    flex: 1,
+    backgroundColor: "white",
     padding: 5,
-    textAlignVertical:"top",
-    borderColor: "lightgreen",
-    borderWidth:1
+    textAlignVertical: "top",
+    margin: 2,
+    borderRadius: 10
+  },
+  borderpic: {
+    height: (height * 2) / 5,
+    width: "100%",
+    borderRadius: 10
+  },
+  borderCaption: {
+    height: 100,
+    width: (width * 9) / 10,
+    borderRadius: 11
+  },
+  borderMap: {
+    height: 200,
+    width: "90%",
+    borderRadius: 10,
+    overflow: 'hidden'
   }
-})
+});
