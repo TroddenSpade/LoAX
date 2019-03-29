@@ -111,7 +111,7 @@ class Settings extends React.Component {
           start={[1, 0]}
           end={[0, 0]}
         >
-          <TouchableOpacity style={styles.button} onPress={this.post}>
+          <TouchableOpacity style={styles.button} onPress={this.update}>
             {this.state.fontLoaded ? (
               <Text
                 style={{
