@@ -12,13 +12,18 @@ export const registerUser =(data)=>{
     }
 }
 
-export const signinUser=(data)=>{
-    const request = 
-    axios.post(SIGN_IN,data)
-    .then(response=>response.data)
-    return{
-        type:"USER_SIGN_IN",
-        payload:request
+export const signinUser=(data,scb,fcb)=>{
+    return (dispatch,getState) =>{
+        axios.post(SIGN_IN,data)
+        .then(response=>{
+            if(response.data.isAuth){
+                scb(response.data);
+                dispatch({type:'USER_SIGN_IN',payload:response.data})
+            }else{
+                fcb(response.data.err);
+            }
+        })
+        .catch(e=>fcb(e))
     }
 }
 
