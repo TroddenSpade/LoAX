@@ -75,18 +75,17 @@ class Signin extends React.Component {
         password: this.state.password
       };
       this.props
-        .signinUser(data)
-        .then(response => {
+        .signinUser(data,
+        res => {
           if (this.state.autoSignIn) {
-            console.log(response);
-            setTokens(response.payload.user);
+            setTokens(res.user);
           }
-        })
-        .catch(e =>
+        },
+        e =>
           this.dropdown.alertWithType(
             "error",
             "Error !",
-            `error has been occurred :( \n${e} `
+            `${e}`
           )
         );
     }
@@ -178,7 +177,16 @@ class Signin extends React.Component {
               styles.signUpButton,
               { borderColor: "white", width: 100, height: 40 }
             ]}
-            onPress={() => this.props.navigation.navigate("signUp")}
+            onPress={() =>
+              this.props.navigation.navigate("signUp", {
+                successHandler: () =>
+                this.dropdown.alertWithType(
+                    "success",
+                    "Welcome!",
+                    "you have signed up successfully."
+                  )
+              })
+            }
           >
             {this.state.fontLoaded ? (
               <Text
@@ -284,7 +292,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: 300,
     height: 50,
-    marginBottom: 10 ,
-    marginTop:20,
+    marginBottom: 10,
+    marginTop: 20
   }
 });

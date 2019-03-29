@@ -57,6 +57,9 @@ class Signup extends React.Component {
   };
 
   signup = () => {
+    const { navigation } = this.props;
+    const successHandler = navigation.getParam("successHandler");
+    
     if (this.state.email.length == 0) {
       this.dropdown.alertWithType("error", "Enter an Email", "Try Again !");
     } else if (this.state.username.length == 0) {
@@ -74,13 +77,14 @@ class Signup extends React.Component {
         const data = {
           email: this.state.email.trim().toLowerCase(),
           password: this.state.password,
-          username: this.state.username,
+          username: this.state.username.trim().toLowerCase(),
           avatar: `${uiAvatar}${this.state.username}`,
           bio: ""
         };
         this.props
           .registerUser(data)
           .then(() => {
+            successHandler();
             this.props.navigation.navigate("signIn");
           })
           .catch(e => {
