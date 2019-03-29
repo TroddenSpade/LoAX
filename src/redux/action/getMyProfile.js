@@ -35,13 +35,12 @@ export const updateData =(data,userid,scb,fcb)=>{
             dispatch({type:'USER_UPDATE_ERROR'});
             fcb(e);
         });
-
     }
 }
 
-export const deletePost=(postId,postKey,scb,fcb)=>{
+export const deletePost=(postId,postKey,userid,scb,fcb)=>{
     return (dispatch,getState)=>{
-        axios.delete(`${DELETE_POST}?id=${postId}`)
+        axios.delete(`${DELETE_POST}?id=${postId}&userid=${userid}`)
         .then(res=>{
             if(res.data.delete){
                 scb();
