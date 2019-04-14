@@ -59,7 +59,7 @@ class Signup extends React.Component {
   signup = () => {
     const { navigation } = this.props;
     const successHandler = navigation.getParam("successHandler");
-    
+
     if (this.state.email.length == 0) {
       this.dropdown.alertWithType("error", "Enter an Email", "Try Again !");
     } else if (this.state.username.length == 0) {
@@ -74,22 +74,30 @@ class Signup extends React.Component {
           "Try Again !"
         );
       } else {
-        const data = {
-          email: this.state.email.trim().toLowerCase(),
-          password: this.state.password,
-          username: this.state.username.trim().toLowerCase(),
-          avatar: `${uiAvatar}${this.state.username}`,
-          bio: ""
-        };
-        this.props
-          .registerUser(data)
-          .then(() => {
-            successHandler();
-            this.props.navigation.navigate("signIn");
-          })
-          .catch(e => {
-            this.dropdown.alertWithType("error", "Error !", e);
-          });
+        if (this.state.password.length < 6 || this.state.password.length > 20) {
+          this.dropdown.alertWithType(
+            "error",
+            "Error !",
+            `Password must contain between 6 and 20 characters.`
+          );
+        } else {
+          const data = {
+            email: this.state.email.trim().toLowerCase(),
+            password: this.state.password,
+            username: this.state.username.trim().toLowerCase(),
+            avatar: `${uiAvatar}${this.state.username}`,
+            bio: ""
+          };
+          this.props
+            .registerUser(data)
+            .then(() => {
+              successHandler();
+              this.props.navigation.navigate("signIn");
+            })
+            .catch(e => {
+              this.dropdown.alertWithType("error", "Error !", e);
+            });
+        }
       }
     }
   };
@@ -213,7 +221,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: 300,
     height: 50,
-    marginBottom: 10 ,
-    marginTop:20,
+    marginBottom: 10,
+    marginTop: 20
   }
 });

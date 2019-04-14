@@ -70,24 +70,27 @@ class Signin extends React.Component {
         `Fill Out Empty Fields !`
       );
     } else {
-      const data = {
-        email: this.state.email.trim().toLowerCase(),
-        password: this.state.password
-      };
-      this.props
-        .signinUser(data,
-        res => {
-          if (this.state.autoSignIn) {
-            setTokens(res.user);
-          }
-        },
-        e =>
-          this.dropdown.alertWithType(
-            "error",
-            "Error !",
-            `${e}`
-          )
+      if (this.state.password.length < 6 || this.state.password.length > 20) {
+        this.dropdown.alertWithType(
+          "error",
+          "Error !",
+          `Password must contain between 6 and 20 characters.`
         );
+      } else {
+        const data = {
+          email: this.state.email.trim().toLowerCase(),
+          password: this.state.password
+        };
+        this.props.signinUser(
+          data,
+          res => {
+            if (this.state.autoSignIn) {
+              setTokens(res.user);
+            }
+          },
+          e => this.dropdown.alertWithType("error", "Error !", `${e}`)
+        );
+      }
     }
   };
 
@@ -180,7 +183,7 @@ class Signin extends React.Component {
             onPress={() =>
               this.props.navigation.navigate("signUp", {
                 successHandler: () =>
-                this.dropdown.alertWithType(
+                  this.dropdown.alertWithType(
                     "success",
                     "Welcome!",
                     "you have signed up successfully."
