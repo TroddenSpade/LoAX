@@ -36,7 +36,7 @@ class AddPost extends React.Component {
       latitudeDelta: 0.0202,
       longitudeDelta: 0.0149
     },
-    caption: "",
+    caption: false,
     loading: false,
     fontLoaded: false
   };
@@ -104,7 +104,13 @@ class AddPost extends React.Component {
         9
       )
     );
-    formData.append("caption", this.state.caption);
+    if (this.state.caption){
+      formData.append("caption", this.state.caption);
+      var arr = this.stringToTag(this.state.caption);
+      for (var i = 0; i < arr.length; i++) {
+        formData.append("tags", arr[i]);
+      }
+    }
     formData.append("region.latitude", this.state.location.latitude);
     formData.append("region.longitude", this.state.location.longitude);
     formData.append("region.latitudeDelta", this.state.location.latitudeDelta);
@@ -118,10 +124,6 @@ class AddPost extends React.Component {
       type: "image/jpg"
     });
     formData.append("user_data", this.props.userid);
-    var arr = this.stringToTag(this.state.caption);
-    for (var i = 0; i < arr.length; i++) {
-      formData.append("tags", arr[i]);
-    }
 
     this.props.post(formData, successHandler, errorHandler);
     this.props.navigation.goBack(null);
@@ -294,6 +296,6 @@ const styles = StyleSheet.create({
     height: 200,
     width: "90%",
     borderRadius: 10,
-    overflow: 'hidden'
+    overflow: "hidden"
   }
 });
