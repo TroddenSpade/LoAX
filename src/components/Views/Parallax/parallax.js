@@ -105,7 +105,7 @@ class Parallax extends React.Component {
                       report(
                         this.state.modalId,
                         "WRONG_LOCATION",
-                        this.props.data,
+                        this.props.userid,
                         () =>
                           this.dropdown.alertWithType(
                             "success",
@@ -137,7 +137,7 @@ class Parallax extends React.Component {
                       report(
                         this.state.modalId,
                         "UNRELATED_PICTURE",
-                        this.props.data,
+                        this.props.userid,
                         () =>
                           this.dropdown.alertWithType(
                             "success",
@@ -169,7 +169,7 @@ class Parallax extends React.Component {
                       report(
                         this.state.modalId,
                         "ADVERTISMENT",
-                        this.props.data,
+                        this.props.userid,
                         () =>
                           this.dropdown.alertWithType(
                             "success",
@@ -201,7 +201,7 @@ class Parallax extends React.Component {
                       report(
                         this.state.modalId,
                         "VIOLENCE",
-                        this.props.data,
+                        this.props.userid,
                         () =>
                           this.dropdown.alertWithType(
                             "success",
@@ -233,7 +233,7 @@ class Parallax extends React.Component {
                       report(
                         this.state.modalId,
                         "NUDITY",
-                        this.props.data,
+                        this.props.userid,
                         () =>
                           this.dropdown.alertWithType(
                             "success",
